@@ -1,0 +1,115 @@
+.homepageHeader {
+  border-bottom: 1px solid rgb(206, 206, 206);
+  height: 4rem;
+}
+
+.homepageHeader nav {
+  margin: 0.75rem clamp(1rem, 3vw, 2.5rem);
+}
+
+.homepageHeader ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+
+  text-decoration: none;
+}
+
+.logoSvg {
+  width: 2.5rem;
+  margin-right: 0.5rem;
+}
+
+.logoText {
+  font-family: "bebas_neueregular", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.burgerMenu {
+  border: none;
+  background-color: transparent;
+}
+
+.rightHeader {
+  display: none !important;
+}
+
+.rightHeader a,
+.rightHeader .signOutButton {
+  display: block;
+  text-decoration: none;
+  color: #000;
+}
+
+.rightHeader .signOutButton {
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+@media (max-width: 600px) {
+  .rightHeader {
+    position: fixed;
+    top: 4rem;
+    left: 0;
+
+    background-color: #fff;
+    width: 100%;
+    height: calc(100vh - 4rem);
+    z-index: 9999;
+  }
+
+  .rightHeader.open {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .rightHeader li {
+    width: 100%;
+  }
+
+  .rightHeader a,
+  .rightHeader .signOutButton {
+    text-align: center;
+    font-weight: 500;
+    padding: 1.5rem 0;
+  }
+
+  .rightHeader .signOutButton {
+    width: 100%;
+  }
+
+  .rightHeader a:hover,
+  .rightHeader .signOutButton:hover {
+    background-color: #abeaff;
+  }
+}
+
+@media (min-width: 600px) {
+  .burgerMenu {
+    display: none;
+  }
+
+  .rightHeader {
+    display: flex !important;
+  }
+
+  .rightHeader a,
+  .rightHeader .signOutButton {
+    margin-left: clamp(1rem, 3vw, 2rem);
+  }
+
+  .rightHeader a:hover,
+  .rightHeader .signOutButton:hover {
+    text-decoration: underline;
+  }
+}
