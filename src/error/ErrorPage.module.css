@@ -1,0 +1,44 @@
+.pageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100vh;
+  margin-top: -3rem;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.errorHeading {
+  font-size: clamp(3rem, 8vw, 4rem);
+}
+
+.homepageLink {
+  color: #00a7e1;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.logoSvg {
+  width: 2.5rem;
+  margin-right: 0.5rem;
+}
+
+.logoText {
+  font-family: "bebas_neueregular", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #000;
+}
