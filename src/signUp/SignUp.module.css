@@ -1,0 +1,179 @@
+.pageContainer {
+  margin: 0 1rem;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.logoSvg {
+  width: 2.5rem;
+  margin-right: 0.5rem;
+}
+
+.logoText {
+  font-family: "bebas_neueregular", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.heroSection {
+  display: none;
+  background-image: url("../assets/auth/signUpBackground.jpg");
+  background-position: 60% 55%;
+  background-color: #2909dc;
+  margin: 0;
+}
+
+.heroContent {
+  color: #fff;
+  width: 80%;
+  margin: clamp(5rem, 10vw, 10rem) auto 0 auto;
+}
+
+.heroContent * {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.heroContent .logoSvg {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(3%) saturate(1%)
+    hue-rotate(205deg) brightness(106%) contrast(101%);
+  width: 5rem;
+}
+
+.callToAction h1 {
+  font-size: 2.4rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.callToAction .logoText {
+  font-size: 2.5rem;
+  color: inherit;
+}
+
+.callToAction p {
+  line-height: 1.5;
+}
+
+.callToAction .tripleT {
+  height: 1rem;
+  margin: 0;
+}
+
+.formSection {
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.formSection .logoLink {
+  margin: 3rem 0 1.5rem 0;
+}
+
+.authForm h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.authForm label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.authForm input[type="text"],
+.authForm button[type="submit"] {
+  font-size: 1rem;
+  width: 100%;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.authForm input[type="text"] {
+  border: 1px solid #cecece;
+}
+
+.authForm button[type="submit"] {
+  font-weight: 600;
+  background-color: #abeaff;
+  border: none;
+  padding: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.authForm button[type="submit"]:hover {
+  background-color: #a3e7fd;
+}
+
+.authForm button[type="submit"]:active {
+  background-color: #a3e7fd;
+}
+
+.redirectLink {
+  text-align: center;
+}
+
+.redirectLink a {
+  text-decoration: none;
+  color: #0077b6;
+}
+
+.redirectLink a:hover {
+  text-decoration: underline;
+}
+
+.invalid {
+  outline: 1px solid red;
+  border: none;
+}
+
+.error {
+  color: red;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 800px) {
+  .pageContainer {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .heroSection {
+    flex: 1.5;
+    display: block;
+  }
+
+  .formSection {
+    flex: 1;
+    max-width: none;
+    margin: 0 3rem;
+  }
+
+  .formSection .logoLink {
+    justify-content: flex-start;
+    margin: clamp(5rem, 10vw, 10rem) 0 6rem 0;
+  }
+
+  .formContent {
+    max-width: 25rem;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1100px) {
+  .formContent h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .formContent .redirectLink {
+    margin-top: 0.5rem;
+  }
+}

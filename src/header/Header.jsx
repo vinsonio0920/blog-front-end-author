@@ -43,7 +43,7 @@ const Header = () => {
                 alt="Logo SVG"
                 className={styles.logoSvg}
               />
-              <span className={styles.logoText}>Vinson Blogs</span>
+              <span className={styles.logoText}>Vinson Studio</span>
             </Link>
           </li>
           <li>
@@ -61,10 +61,10 @@ const Header = () => {
               }
             >
               <li>
-                <Link to="/Journal">Journal</Link>
+                <Link to="/Journal">All Posts</Link>
               </li>
               <li>
-                <Link to="/articles">Articles</Link>
+                <Link to="/articles">Create Post</Link>
               </li>
               <li>
                 <Link to="About">About</Link>
