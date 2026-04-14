@@ -14,15 +14,23 @@ const dashboardLoader = async () => {
       // no !response.ok conditional because our posts API always return JSON!
 
       const result = await response.json();
-      return result;
+      return { result };
     } catch (err) {
       console.err(err.message);
       return {
-        status: "error",
+        result: {
+          status: "error",
+          data: [],
+        },
       };
     }
   } else {
-    console.log("No!");
+    // returns the data needed to show not signed in in Dashboard
+    return {
+      result: {
+        data: [],
+      },
+    };
   }
 };
 

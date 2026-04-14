@@ -61,13 +61,13 @@ const Header = () => {
               }
             >
               <li>
-                <Link to="/Journal">All Posts</Link>
+                <Link to="/">All Posts</Link>
               </li>
               <li>
-                <Link to="/articles">Create Post</Link>
+                <Link to="/create">Create Post</Link>
               </li>
               <li>
-                <Link to="About">About</Link>
+                <Link to="/about">About</Link>
               </li>
               <li>
                 {jwt.jwtToken ? (

@@ -1,1 +1,46 @@
-trhy 
+.errorContainer,
+.constructionContainer {
+  min-height: calc(100vh - 4rem);
+}
+
+.errorContainer,
+.emptyDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.errorPara,
+.emptyDiv p {
+  text-align: center;
+  color: #ff0000;
+  padding-bottom: 0;
+  margin: -4rem 0 1rem 0;
+}
+
+.errorContainer a,
+.emptyDiv a {
+  color: #00a7e1;
+}
+
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 75vh;
+}
+
+.mainHeading {
+  font-size: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+}
+
+.emptyDiv {
+  flex: 1;
+}
+
+.emptyDiv p {
+  color: #000;
+}
