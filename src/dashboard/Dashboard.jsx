@@ -4,10 +4,23 @@ import { useContext, useState } from "react";
 import { JwtContext } from "../jwt-context";
 import { format } from "date-fns";
 
-const ConfirmationModal = ({ targetedPost }) => {
+const ConfirmationModal = ({
+  targetedPost,
+  setShowConfirmation,
+  setTargetedPost,
+}) => {
+  // here if we cancel we should also setShowConfirmation and targetedPost
+  // should this be a form or... just a fetch?
+
+  // works for both cancel button and overlay
+  const handleCancelClick = () => {
+    setShowConfirmation(false);
+    setTargetedPost(null);
+  };
+
   return (
     <>
-      <div className="overlay"></div>
+      <div className="overlay" onClick={handleCancelClick}></div>
       <div className={styles.confirmationModal}>
         <h1>Are you sure?</h1>
         <p>
@@ -15,7 +28,11 @@ const ConfirmationModal = ({ targetedPost }) => {
           post?
         </p>
         <div className={styles.confirmationButtons}>
-          <button type="button" className={styles.cancelButton}>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleCancelClick}
+          >
             Cancel
           </button>
           <button type="button" className={styles.confirmButton}>
@@ -27,8 +44,13 @@ const ConfirmationModal = ({ targetedPost }) => {
   );
 };
 
-const Post = ({ post }) => {
+const Post = ({ post, setShowConfirmation, setTargetedPost }) => {
   const formattedDate = format(post.created, "MMM d, y");
+
+  const handlePublishClick = () => {
+    setShowConfirmation(true);
+    setTargetedPost(post);
+  };
 
   return (
     <article className={styles.postArticle}>
@@ -62,6 +84,7 @@ const Post = ({ post }) => {
       <button
         type="button"
         className={`${styles.publishedButton} ${post.published ? styles.published : styles.notPublished}`}
+        onClick={handlePublishClick}
       >
         {post.published ? "Published" : "Not Published"}
       </button>
@@ -73,7 +96,7 @@ const Dashboard = () => {
   const jwt = useContext(JwtContext);
   const [page, setPage] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [targetedPost, setTargetedPost] = useState({ published: true });
+  const [targetedPost, setTargetedPost] = useState(null);
   const { result } = useLoaderData();
 
   const posts = result.data;
@@ -120,13 +143,23 @@ const Dashboard = () => {
 
   return (
     <>
-      <ConfirmationModal targetedPost={targetedPost} />
+      {targetedPost ? (
+        <ConfirmationModal
+          targetedPost={targetedPost}
+          setShowConfirmation={setShowConfirmation}
+          setTargetedPost={setTargetedPost}
+        />
+      ) : null}
       <div className={styles.dashboardContainer}>
         <h1 className={styles.mainHeading}>Dashboard</h1>
         <ul className={styles.postsUl}>
           {pagePosts.map((post) => (
             <li key={post.id}>
-              <Post post={post} />
+              <Post
+                post={post}
+                setShowConfirmation={setShowConfirmation}
+                setTargetedPost={setTargetedPost}
+              />
             </li>
           ))}
         </ul>
