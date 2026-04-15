@@ -44,3 +44,127 @@
 .emptyDiv p {
   color: #000;
 }
+
+.dashboardContainer {
+  margin: 3rem clamp(1rem, 7vw, 4rem) 0 clamp(1rem, 7vw, 4rem);
+}
+
+.postArticle {
+  position: relative;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  height: 100%;
+  padding-bottom: 1rem;
+  margin-bottom: 3rem;
+}
+
+.postArticle *:not(.postImage) {
+  padding-left: 1rem;
+}
+
+.postArticle *:not(.articleLink) {
+  position: relative;
+  z-index: 999;
+}
+
+.articleLink {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.postLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.postLink:hover {
+  text-decoration: underline;
+}
+
+.postImage {
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+  z-index: -1 !important;
+}
+
+.postCreated {
+  font-weight: 600;
+  color: rgb(79, 79, 79);
+  margin-bottom: 1rem;
+}
+
+.postHeading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.75rem 0;
+}
+
+.categoriesContainer {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.categoryLink {
+  display: block;
+  font-weight: 600;
+  text-decoration: none;
+  color: #000;
+  border: 1.5px solid #000;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.categoryLink:hover {
+  background-color: rgb(244, 244, 244);
+}
+
+.categoryLink:active {
+  background-color: #fff;
+}
+
+.pageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5rem 0 1rem 0;
+}
+
+.pageContainer button {
+  background-color: transparent;
+  border: none;
+}
+
+.pageContainer button.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.pageContainer p {
+  margin: -0.1rem 0.5rem 0 0.5rem;
+}
+
+@media (min-width: 500px) {
+  .postsUl {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem 1.5rem;
+  }
+
+  .postArticle {
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: 1100px) {
+  .dashboardContainer {
+    width: 90%;
+    max-width: 70rem;
+    margin: 3rem auto 0 auto;
+  }
+}

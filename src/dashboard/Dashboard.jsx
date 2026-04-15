@@ -2,13 +2,24 @@ import { Link, useLoaderData } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import { useContext, useState } from "react";
 import { JwtContext } from "../jwt-context";
+import { format } from "date-fns";
 
 const Post = ({ post }) => {
+  const formattedDate = format(post.created, "MMM d, y");
+
   return (
     <article className={styles.postArticle}>
-      <img src={post.image} width="300" alt="Post image" />
-      <h2>{post.title}</h2>
-      <p>{post.created}</p>
+      <Link to={`/posts/${post.id}`} className={styles.articleLink}></Link>
+      <img
+        src={post.image}
+        width="300"
+        className={styles.postImage}
+        alt="Post image"
+      />
+      <Link to={`posts/${post.id}`} className={styles.postLink}>
+        <h1 className={styles.postHeading}>{post.title}</h1>
+      </Link>
+      <p className={styles.postCreated}>{formattedDate}</p>
       <p>{post.description}</p>
       <div className={styles.categoriesContainer}>
         {post.categories.map((category) => (
@@ -76,9 +87,9 @@ const Dashboard = () => {
   }
 
   return (
-    <>
+    <div className={styles.dashboardContainer}>
       <h1 className={styles.mainHeading}>Dashboard</h1>
-      <ul className={styles.postUl}>
+      <ul className={styles.postsUl}>
         {pagePosts.map((post) => (
           <li key={post.id}>
             <Post post={post} />
@@ -104,7 +115,7 @@ const Dashboard = () => {
           <span className="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
