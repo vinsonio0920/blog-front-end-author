@@ -51,19 +51,24 @@
 
 .postArticle {
   position: relative;
+  display: flex;
+  flex-direction: column;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   height: 100%;
-  padding-bottom: 1rem;
   margin-bottom: 3rem;
-}
-
-.postArticle *:not(.postImage) {
-  padding-left: 1rem;
 }
 
 .postArticle *:not(.articleLink) {
   position: relative;
   z-index: 999;
+}
+
+.articleContent {
+  flex: 1;
+}
+
+.articleContent *:not(.postImage, .postLink) {
+  padding-left: 0.75rem;
 }
 
 .articleLink {
@@ -91,6 +96,7 @@
 }
 
 .postCreated {
+  display: inline-block;
   font-weight: 600;
   color: rgb(79, 79, 79);
   margin-bottom: 1rem;
@@ -125,6 +131,40 @@
 
 .categoryLink:active {
   background-color: #fff;
+}
+
+.publishedButton {
+  display: block;
+  font-size: 1rem;
+  color: #fff;
+  border: none;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.publishedButton.published {
+  background-color: #04aa6d;
+}
+
+.publishedButton.published:hover {
+  background-color: #10b176;
+}
+
+.publishedButton.published:active {
+  background-color: #04aa6d;
+}
+
+.publishedButton.notPublished {
+  background-color: #f44336;
+}
+
+.publishedButton.notPublished:hover {
+  background-color: #f55044;
+}
+
+.publishedButton.notPublished:active {
+  background-color: #f44336;
 }
 
 .pageContainer {

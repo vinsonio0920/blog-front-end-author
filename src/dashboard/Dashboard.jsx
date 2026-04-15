@@ -9,30 +9,37 @@ const Post = ({ post }) => {
 
   return (
     <article className={styles.postArticle}>
-      <Link to={`/posts/${post.id}`} className={styles.articleLink}></Link>
-      <img
-        src={post.image}
-        width="300"
-        className={styles.postImage}
-        alt="Post image"
-      />
-      <Link to={`posts/${post.id}`} className={styles.postLink}>
-        <h1 className={styles.postHeading}>{post.title}</h1>
-      </Link>
-      <p className={styles.postCreated}>{formattedDate}</p>
-      <p>{post.description}</p>
-      <div className={styles.categoriesContainer}>
-        {post.categories.map((category) => (
-          <Link
-            to={`/categories/${category.id}`}
-            className={styles.categoryLink}
-            key={category.id}
-          >
-            {category.name}
-          </Link>
-        ))}
+      <div className={styles.articleContent}>
+        <Link to={`/posts/${post.id}`} className={styles.articleLink}></Link>
+        <img
+          src={post.image}
+          width="300"
+          className={styles.postImage}
+          alt="Post image"
+        />
+        <Link to={`posts/${post.id}`} className={styles.postLink}>
+          <h1 className={styles.postHeading}>{post.title}</h1>
+        </Link>
+        <p className={styles.postCreated}>{formattedDate}</p>
+        <p>{post.description}</p>
+        {post.categories.length >= 1 ? (
+          <div className={styles.categoriesContainer}>
+            {post.categories.map((category) => (
+              <Link
+                to={`/categories/${category.id}`}
+                className={styles.categoryLink}
+                key={category.id}
+              >
+                {category.name}
+              </Link>
+            ))}
+          </div>
+        ) : null}
       </div>
-      <button type="button">
+      <button
+        type="button"
+        className={`${styles.publishedButton} ${post.published ? styles.published : styles.notPublished}`}
+      >
         {post.published ? "Published" : "Not Published"}
       </button>
     </article>
