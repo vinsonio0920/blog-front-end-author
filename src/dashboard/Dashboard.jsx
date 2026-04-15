@@ -4,6 +4,29 @@ import { useContext, useState } from "react";
 import { JwtContext } from "../jwt-context";
 import { format } from "date-fns";
 
+const ConfirmationModal = ({ targetedPost }) => {
+  return (
+    <>
+      <div className="overlay"></div>
+      <div className={styles.confirmationModal}>
+        <h1>Are you sure?</h1>
+        <p>
+          Do you want to {targetedPost.published ? "unpublish" : "publish"} this
+          post?
+        </p>
+        <div className={styles.confirmationButtons}>
+          <button type="button" className={styles.cancelButton}>
+            Cancel
+          </button>
+          <button type="button" className={styles.confirmButton}>
+            {targetedPost.published ? "unpublish" : "publish"}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const Post = ({ post }) => {
   const formattedDate = format(post.created, "MMM d, y");
 
@@ -49,6 +72,8 @@ const Post = ({ post }) => {
 const Dashboard = () => {
   const jwt = useContext(JwtContext);
   const [page, setPage] = useState(1);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [targetedPost, setTargetedPost] = useState({ published: true });
   const { result } = useLoaderData();
 
   const posts = result.data;
@@ -94,35 +119,38 @@ const Dashboard = () => {
   }
 
   return (
-    <div className={styles.dashboardContainer}>
-      <h1 className={styles.mainHeading}>Dashboard</h1>
-      <ul className={styles.postsUl}>
-        {pagePosts.map((post) => (
-          <li key={post.id}>
-            <Post post={post} />
-          </li>
-        ))}
-      </ul>
-      <div className={styles.pageContainer}>
-        <button
-          className={page <= 1 ? styles.disabled : ""}
-          aria-label="Previous page"
-          data-type="previous"
-          onClick={handlePageButtonClick}
-        >
-          <span className="material-symbols-outlined">chevron_left</span>
-        </button>
-        <p>Page {page}</p>
-        <button
-          className={page >= maxPages ? styles.disabled : ""}
-          aria-label="Next page"
-          data-type="next"
-          onClick={handlePageButtonClick}
-        >
-          <span className="material-symbols-outlined">chevron_right</span>
-        </button>
+    <>
+      <ConfirmationModal targetedPost={targetedPost} />
+      <div className={styles.dashboardContainer}>
+        <h1 className={styles.mainHeading}>Dashboard</h1>
+        <ul className={styles.postsUl}>
+          {pagePosts.map((post) => (
+            <li key={post.id}>
+              <Post post={post} />
+            </li>
+          ))}
+        </ul>
+        <div className={styles.pageContainer}>
+          <button
+            className={page <= 1 ? styles.disabled : ""}
+            aria-label="Previous page"
+            data-type="previous"
+            onClick={handlePageButtonClick}
+          >
+            <span className="material-symbols-outlined">chevron_left</span>
+          </button>
+          <p>Page {page}</p>
+          <button
+            className={page >= maxPages ? styles.disabled : ""}
+            aria-label="Next page"
+            data-type="next"
+            onClick={handlePageButtonClick}
+          >
+            <span className="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
