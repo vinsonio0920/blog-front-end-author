@@ -255,6 +255,11 @@
   background-color: #f44336;
 }
 
+.error {
+  color: #f44336;
+  margin-top: -0.5rem;
+}
+
 @media (min-width: 500px) {
   .postsUl {
     display: grid;

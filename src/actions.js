@@ -96,12 +96,7 @@ const dashboardAction = async ({ request }) => {
     });
 
     const result = await response.json();
-    if (result.status === "success") {
-      return redirect("/");
-    } else {
-      // we could add an error!
-      throw new Error("There was a problem updating the post!");
-    }
+    return result;
   } catch (err) {
     console.error(err.message);
   }

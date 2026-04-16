@@ -1,32 +1,37 @@
-import { Form, Link, useLoaderData } from "react-router-dom";
+import { Link, useFetcher, useLoaderData } from "react-router-dom";
 import styles from "./Dashboard.module.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { JwtContext } from "../jwt-context";
 import { format } from "date-fns";
 
-const ConfirmationModal = ({
-  targetedPost,
-  setShowConfirmation,
-  setTargetedPost,
-}) => {
-  // here if we cancel we should also setShowConfirmation and targetedPost
-  // should this be a form or... just a fetch?
+const ConfirmationModal = ({ targetedPost, setTargetedPost }) => {
+  const fetcher = useFetcher();
 
-  // works for both cancel button and overlay
+  useEffect(() => {
+    if (fetcher.data?.status === "success") {
+      // hide modal and reset targetedPost
+      setTargetedPost(null);
+    }
+  }, [fetcher, setTargetedPost]);
+
   const handleCancelClick = () => {
-    setShowConfirmation(false);
     setTargetedPost(null);
   };
 
   return (
     <>
       <div className="overlay" onClick={handleCancelClick}></div>
-      <Form method="POST" className={styles.confirmationModal}>
+      <fetcher.Form method="POST" className={styles.confirmationModal}>
         <h1>Are you sure?</h1>
         <p>
           Do you want to {targetedPost.published ? "unpublish" : "publish"} this
           post?
         </p>
+        {fetcher.data?.status === "error" ? (
+          <p className={styles.error}>
+            An error occurred updating the post. Please try again later.
+          </p>
+        ) : null}
         <div className={styles.confirmationButtons}>
           <button
             type="button"
@@ -45,16 +50,15 @@ const ConfirmationModal = ({
           name="post"
           value={JSON.stringify(targetedPost)}
         />
-      </Form>
+      </fetcher.Form>
     </>
   );
 };
 
-const Post = ({ post, setShowConfirmation, setTargetedPost }) => {
+const Post = ({ post, setTargetedPost }) => {
   const formattedDate = format(post.created, "MMM d, y");
 
   const handlePublishClick = () => {
-    setShowConfirmation(true);
     setTargetedPost(post);
   };
 
@@ -101,7 +105,6 @@ const Post = ({ post, setShowConfirmation, setTargetedPost }) => {
 const Dashboard = () => {
   const jwt = useContext(JwtContext);
   const [page, setPage] = useState(1);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const [targetedPost, setTargetedPost] = useState(null);
   const { result } = useLoaderData();
 
@@ -152,7 +155,6 @@ const Dashboard = () => {
       {targetedPost ? (
         <ConfirmationModal
           targetedPost={targetedPost}
-          setShowConfirmation={setShowConfirmation}
           setTargetedPost={setTargetedPost}
         />
       ) : null}
@@ -161,11 +163,7 @@ const Dashboard = () => {
         <ul className={styles.postsUl}>
           {pagePosts.map((post) => (
             <li key={post.id}>
-              <Post
-                post={post}
-                setShowConfirmation={setShowConfirmation}
-                setTargetedPost={setTargetedPost}
-              />
+              <Post post={post} setTargetedPost={setTargetedPost} />
             </li>
           ))}
         </ul>
