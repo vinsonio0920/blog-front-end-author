@@ -1,5 +1,5 @@
 import { SignIn } from "./signIn/SignIn";
-import { signInAction, signUpAction } from "./actions";
+import { dashboardAction, signInAction, signUpAction } from "./actions";
 import { App } from "./App";
 import { ErrorPage } from "./error/ErrorPage";
 import { SignUp } from "./signUp/SignUp";
@@ -12,7 +12,12 @@ const routes = [
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Dashboard />, loader: dashboardLoader },
+      {
+        index: true,
+        action: dashboardAction,
+        element: <Dashboard />,
+        loader: dashboardLoader,
+      },
     ],
   },
   {

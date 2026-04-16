@@ -68,4 +68,43 @@ const signInAction = async ({ request }) => {
   }
 };
 
-export { signUpAction, signInAction };
+const dashboardAction = async ({ request }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const post = JSON.parse(formData.post);
+  const url = `http://localhost:3000/posts/${post.id}`;
+
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
+
+  try {
+    const formattedPost = {
+      title: post.title,
+      image: post.image,
+      content: post.content,
+      categories: JSON.stringify(post.categories),
+      description: post.description,
+      published: !post.published,
+      author: post.author,
+    };
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: new Headers({
+        Authorization: `Bearer ${jwtToken}`,
+      }),
+      body: new URLSearchParams(formattedPost),
+    });
+
+    const result = await response.json();
+    if (result.status === "success") {
+      return redirect("/");
+    } else {
+      // we could add an error!
+      throw new Error("There was a problem updating the post!");
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export { signUpAction, signInAction, dashboardAction };

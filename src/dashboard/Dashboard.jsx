@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Form, Link, useLoaderData } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import { useContext, useState } from "react";
 import { JwtContext } from "../jwt-context";
@@ -21,7 +21,7 @@ const ConfirmationModal = ({
   return (
     <>
       <div className="overlay" onClick={handleCancelClick}></div>
-      <div className={styles.confirmationModal}>
+      <Form method="POST" className={styles.confirmationModal}>
         <h1>Are you sure?</h1>
         <p>
           Do you want to {targetedPost.published ? "unpublish" : "publish"} this
@@ -35,11 +35,17 @@ const ConfirmationModal = ({
           >
             Cancel
           </button>
-          <button type="button" className={styles.confirmButton}>
+          <button type="submit" className={styles.confirmButton}>
             {targetedPost.published ? "unpublish" : "publish"}
           </button>
         </div>
-      </div>
+        <input
+          type="hidden"
+          id="post"
+          name="post"
+          value={JSON.stringify(targetedPost)}
+        />
+      </Form>
     </>
   );
 };
