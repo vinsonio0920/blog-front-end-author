@@ -39,7 +39,7 @@ const CreateForm = () => {
         </div>
         <div>
           {/* this will have to be quite complex */}
-          <label htmlFor="categorySearc">Categories</label>
+          <label htmlFor="categorySearch">Categories</label>
           <input
             type="text"
             id="categorySearch"
@@ -51,14 +51,28 @@ const CreateForm = () => {
           <label htmlFor="content">Content</label>
           <input type="text" id="content" name="content" required />
         </div>
-        <div htmlFor="published">
-          <label htmlFor="">Publish article?</label>
-          <input type="checkbox" id="published" name="published" checked />
+        <div className={styles.publishedInput}>
+          <label htmlFor="published" className={styles.checkboxContainer}>
+            Publish article?
+            <input
+              type="checkbox"
+              id="published"
+              name="published"
+              defaultChecked
+            />
+            <span className={styles.checkmark}></span>
+          </label>
         </div>
       </section>
       <section>
-        <button type="button">Cancel</button>
-        <button type="submit">Create</button>
+        <div className={styles.confirmationButtons}>
+          <button type="button" className={styles.cancelButton}>
+            Cancel
+          </button>
+          <button type="submit" className={styles.confirmButton}>
+            Create
+          </button>
+        </div>
       </section>
     </Form>
   );
