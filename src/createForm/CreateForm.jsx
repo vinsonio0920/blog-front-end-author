@@ -13,7 +13,7 @@ const CategoryDropdown = ({
 }) => {
   // filter down to related categories (limit 5)
   const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(categoryValue.toLowerCase()),
+    category.name.toLowerCase().includes(categoryValue.trim().toLowerCase()),
   );
   const categoriesResult = filteredCategories.slice(0, 5);
 
@@ -94,6 +94,15 @@ const CreateForm = () => {
     setShowCategoryDropdown(true);
   };
 
+  const handleCategoryDeleteClick = (event) => {
+    const categoryId = event.currentTarget.dataset.id;
+
+    const newSelectedCategories = selectedCategories.filter(
+      (currentCategoryId) => currentCategoryId !== Number(categoryId),
+    );
+    setSelectedCategories(newSelectedCategories);
+  };
+
   return (
     <Form method="PoST">
       <h1>Create New Post</h1>
@@ -124,7 +133,13 @@ const CreateForm = () => {
             {selectedCategories.map((categoryId) => (
               <li key={categoryId} className={styles.selectedCategory}>
                 {categories.find((category) => category.id === categoryId).name}
-                <button type="button" className={styles.closeButton}>
+                <button
+                  type="button"
+                  className={styles.closeButton}
+                  aria-label="Delete category"
+                  onClick={handleCategoryDeleteClick}
+                  data-id={categoryId}
+                >
                   <span
                     className={`material-symbols-outlined ${styles.closeIcon}`}
                   >
