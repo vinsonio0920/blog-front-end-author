@@ -21,8 +21,7 @@ const CategoryDropdown = ({
     const categoryId = event.currentTarget.dataset.id;
 
     // returns if category is already selected
-    if (selectedCategories.includes(Number(categoryId)))
-      return console.log("Already Selected!");
+    if (selectedCategories.includes(Number(categoryId))) return;
 
     // add category to hidden input
     const newSelectedCategories = [...selectedCategories, Number(categoryId)];
@@ -62,8 +61,6 @@ const CreateForm = () => {
   const { result } = useLoaderData();
 
   const categories = result.data;
-
-  console.log(selectedCategories);
 
   // window event listener to remove categoryDropdown when clicked out
   useEffect(() => {
@@ -120,22 +117,23 @@ const CreateForm = () => {
           <input type="text" id="image" name="image" required />
         </div>
         <div>
-          <ul>
-            {selectedCategories.map((categoryId) => (
-              <li key={categoryId}>
-                <p>
-                  {
-                    categories.find((category) => category.id === categoryId)
-                      .name
-                  }
-                </p>
-                <p>Icon here</p>
-              </li>
-            ))}
-          </ul>
           <label htmlFor="categorySearch" className="categoryField">
             Categories
           </label>
+          <ul className={styles.selectedUl}>
+            {selectedCategories.map((categoryId) => (
+              <li key={categoryId} className={styles.selectedCategory}>
+                {categories.find((category) => category.id === categoryId).name}
+                <button type="button" className={styles.closeButton}>
+                  <span
+                    className={`material-symbols-outlined ${styles.closeIcon}`}
+                  >
+                    close
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
           <input
             type="text"
             id="categorySearch"
