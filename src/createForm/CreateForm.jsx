@@ -39,6 +39,13 @@ const CategoryDropdown = ({
               data-id={category.id}
             >
               {category.name}
+              {selectedCategories.includes(category.id) ? (
+                <span
+                  className={`material-symbols-outlined ${styles.checkIcon}`}
+                >
+                  check
+                </span>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -48,6 +55,7 @@ const CategoryDropdown = ({
     return (
       <div className={styles.categoriesDropdown}>
         <p>No categories found.</p>
+        <button type="button">Create category "{categoryValue}"</button>
       </div>
     );
   }
