@@ -5,19 +5,42 @@ import { Form, Link, useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const CategoryDropdown = ({ categories, categoryValue }) => {
+const CategoryDropdown = ({
+  categories,
+  categoryValue,
+  selectedCategories,
+  setSelectedCategories,
+}) => {
   // filter down to related categories (limit 5)
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(categoryValue.toLowerCase()),
   );
   const categoriesResult = filteredCategories.slice(0, 5);
 
+  const handleCategoryLiClick = (event) => {
+    const categoryId = event.currentTarget.dataset.id;
+
+    // returns if category is already selected
+    if (selectedCategories.includes(Number(categoryId)))
+      return console.log("Already Selected!");
+
+    // add category to hidden input
+    const newSelectedCategories = [...selectedCategories, Number(categoryId)];
+    setSelectedCategories(newSelectedCategories);
+  };
+
   if (categoriesResult.length >= 1) {
     return (
       <div className={styles.categoriesDropdown}>
         <ul className={styles.categoriesList}>
           {categoriesResult.map((category) => (
-            <li key={category.id}>{category.name}</li>
+            <li
+              key={category.id}
+              onClick={handleCategoryLiClick}
+              data-id={category.id}
+            >
+              {category.name}
+            </li>
           ))}
         </ul>
       </div>
@@ -35,9 +58,12 @@ const CreateForm = () => {
   const jwt = useContext(JwtContext);
   const [categoryValue, setCategoryValue] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const { result } = useLoaderData();
 
   const categories = result.data;
+
+  console.log(selectedCategories);
 
   // window event listener to remove categoryDropdown when clicked out
   useEffect(() => {
@@ -94,7 +120,19 @@ const CreateForm = () => {
           <input type="text" id="image" name="image" required />
         </div>
         <div>
-          {/* this will have to be quite complex */}
+          <ul>
+            {selectedCategories.map((categoryId) => (
+              <li key={categoryId}>
+                <p>
+                  {
+                    categories.find((category) => category.id === categoryId)
+                      .name
+                  }
+                </p>
+                <p>Icon here</p>
+              </li>
+            ))}
+          </ul>
           <label htmlFor="categorySearch" className="categoryField">
             Categories
           </label>
@@ -111,6 +149,8 @@ const CreateForm = () => {
             <CategoryDropdown
               categories={categories}
               categoryValue={categoryValue}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
             />
           ) : null}
         </div>
@@ -129,6 +169,13 @@ const CreateForm = () => {
             />
             <span className={styles.checkmark}></span>
           </label>
+        </div>
+        <div>
+          <input
+            type="hidden"
+            name="categories"
+            value={JSON.stringify(selectedCategories)}
+          />
         </div>
       </section>
       <section>
