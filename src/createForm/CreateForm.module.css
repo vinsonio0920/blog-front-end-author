@@ -34,7 +34,7 @@ form h1 {
 
 label {
   display: block;
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 input[type="text"] {
@@ -52,7 +52,7 @@ input[type="text"] {
 }
 
 .publishedInput label {
-  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .checkboxContainer {
@@ -163,7 +163,7 @@ input[type="text"] {
 
   form label {
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
   }
 
   form input[id="content"] {
