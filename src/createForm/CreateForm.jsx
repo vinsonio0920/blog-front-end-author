@@ -7,12 +7,28 @@ import { useEffect } from "react";
 
 const CategoryDropdown = ({ categories, categoryValue }) => {
   // filter down to related categories (limit 5)
-
-  return (
-    <div>
-      <p>Hello</p>
-    </div>
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(categoryValue.toLowerCase()),
   );
+  const categoriesResult = filteredCategories.slice(0, 5);
+
+  if (categoriesResult.length >= 1) {
+    return (
+      <div className={styles.categoriesDropdown}>
+        <ul className={styles.categoriesList}>
+          {categoriesResult.map((category) => (
+            <li key={category.id}>{category.name}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.categoriesDropdown}>
+        <p>No categories found.</p>
+      </div>
+    );
+  }
 };
 
 const CreateForm = () => {
