@@ -2,8 +2,60 @@ import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
 import { Form, Link } from "react-router-dom";
+import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
 import { useEffect } from "react";
+
+const ContentInput = () => {
+  const [content, setContent] = useState("");
+
+  return (
+    <>
+      <input
+        type="hidden"
+        id="content"
+        name="content"
+        required
+        value={content}
+      />
+      <Editor
+        apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+        init={{
+          height: 500,
+          menubar: false,
+          placeholder: "Write down your thoughts!",
+          plugins: [
+            "advlist",
+            "autolink",
+            "lists",
+            "link",
+            "image",
+            "charmap",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
+            "insertdatetime",
+            "media",
+            "table",
+            "preview",
+            "help",
+            "wordcount",
+          ],
+          toolbar:
+            "undo redo | blocks | " +
+            "bold italic forecolor | alignleft aligncenter " +
+            "alignright alignjustify | bullist numlist outdent indent | " +
+            "removeformat | help",
+          content_style:
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+        }}
+        onEditorChange={(newValue) => setContent(newValue)}
+      />
+    </>
+  );
+};
 
 const CategoryDropdown = ({
   categories,
@@ -35,7 +87,7 @@ const CategoryDropdown = ({
 
   const handleAddCategoryClick = async () => {
     // post new category to the database
-    const url = "http://localhost:3000/categories";
+    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/categories`;
 
     try {
       const response = await fetch(url, {
@@ -118,7 +170,7 @@ const CreateForm = () => {
     const fetchData = async () => {
       // fetch categories and set it to categories
       // this is so that the category input can work correctly
-      const url = "http://localhost:3000/categories";
+      const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/categories`;
 
       try {
         const response = await fetch(url);
@@ -255,7 +307,7 @@ const CreateForm = () => {
         </div>
         <div>
           <label htmlFor="content">Content</label>
-          <input type="text" id="content" name="content" required />
+          <ContentInput />
         </div>
         <div className={styles.publishedInput}>
           <label htmlFor="published" className={styles.checkboxContainer}>
