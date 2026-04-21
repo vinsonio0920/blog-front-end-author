@@ -4,7 +4,7 @@ import { App } from "./App";
 import { ErrorPage } from "./error/ErrorPage";
 import { SignUp } from "./signUp/SignUp";
 import { Dashboard } from "./dashboard/Dashboard";
-import { createFormLoader, dashboardLoader } from "./loaders";
+import { dashboardLoader } from "./loaders";
 import { CreateForm } from "./createForm/CreateForm";
 
 const routes = [
@@ -22,7 +22,6 @@ const routes = [
       {
         path: "/create",
         element: <CreateForm />,
-        loader: createFormLoader,
       },
     ],
   },

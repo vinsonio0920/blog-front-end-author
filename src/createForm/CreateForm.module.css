@@ -131,7 +131,8 @@ input[id="categorySearch"] {
 }
 
 .categoriesList li,
-.categoriesDropdown p {
+.categoriesDropdown p,
+.categoriesDropdown .createButton {
   padding: 0.75rem 1rem;
 }
 
@@ -142,6 +143,24 @@ input[id="categorySearch"] {
 .categoriesList li:hover {
   cursor: pointer;
   background-color: #abeaff;
+}
+
+.categoriesDropdown .createButton {
+  display: flex;
+  align-items: center;
+  text-align: start;
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+}
+
+.categoriesDropdown .createButton:hover {
+  background-color: #f4f4f4;
+}
+
+.categoriesDropdown .createButton span {
+  margin-right: 0.5rem;
 }
 
 .selectedUl {

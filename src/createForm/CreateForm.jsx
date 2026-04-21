@@ -1,16 +1,21 @@
 import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
-import { Form, Link, useLoaderData } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 
 const CategoryDropdown = ({
   categories,
   categoryValue,
+  setCategoryValue,
   selectedCategories,
   setSelectedCategories,
+  setCategories,
 }) => {
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
+
   // filter down to related categories (limit 5)
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(categoryValue.trim().toLowerCase()),
@@ -26,6 +31,39 @@ const CategoryDropdown = ({
     // add category to hidden input
     const newSelectedCategories = [...selectedCategories, Number(categoryId)];
     setSelectedCategories(newSelectedCategories);
+  };
+
+  const handleAddCategoryClick = async () => {
+    // post new category to the database
+    const url = "http://localhost:3000/categories";
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: new Headers({
+          Authorization: `Bearer ${jwtToken}`,
+        }),
+        body: new URLSearchParams({
+          name: categoryValue,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.status === "error") {
+        // add error stuff here.
+      }
+
+      // add category to selectedCategories
+      const category = result.data;
+      const newCategories = [...categories, category];
+      const newSelectedCategories = [...selectedCategories, category.id];
+
+      setCategories(newCategories);
+      setSelectedCategories(newSelectedCategories);
+      setCategoryValue("");
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   if (categoriesResult.length >= 1) {
@@ -55,7 +93,14 @@ const CategoryDropdown = ({
     return (
       <div className={styles.categoriesDropdown}>
         <p>No categories found.</p>
-        <button type="button">Create category "{categoryValue}"</button>
+        <button
+          type="button"
+          className={styles.createButton}
+          onClick={handleAddCategoryClick}
+        >
+          <span className="material-symbols-outlined">add</span>
+          Create category "{categoryValue}"
+        </button>
       </div>
     );
   }
@@ -66,12 +111,34 @@ const CreateForm = () => {
   const [categoryValue, setCategoryValue] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const { result } = useLoaderData();
+  const [categories, setCategories] = useState(null);
 
-  const categories = result.data;
-
-  // window event listener to remove categoryDropdown when clicked out
   useEffect(() => {
+    // gets the categories on mount (setState will update it accordingly)
+    const fetchData = async () => {
+      // fetch categories and set it to categories
+      // this is so that the category input can work correctly
+      const url = "http://localhost:3000/categories";
+
+      try {
+        const response = await fetch(url);
+
+        const result = await response.json();
+        if (result.status === "error")
+          throw new Error("Problem occurred while fetching categories");
+
+        setCategories(result.data);
+      } catch (err) {
+        console.error(err.message);
+        setCategories("error");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    // window event listener to remove categoryDropdown when clicked out
     const onWindowClick = (event) => {
       if (!event.target.classList.contains("categoryField")) {
         setShowCategoryDropdown(false);
@@ -90,6 +157,14 @@ const CreateForm = () => {
       <div className={styles.errorContainer}>
         <p className={styles.errorPara}>You are not currently signed in.</p>
         <Link to="/sign-in">Sign in now</Link>
+      </div>
+    );
+  } else if (categories === "error") {
+    return (
+      <div className={styles.errorContainer}>
+        <p className={styles.errorPara}>
+          There was an error getting the categories. Please try again later.
+        </p>
       </div>
     );
   }
@@ -165,13 +240,16 @@ const CreateForm = () => {
             className="categoryField"
             onChange={handleCategoryChange}
             onClick={handleCategoryClick}
+            value={categoryValue}
           />
           {showCategoryDropdown ? (
             <CategoryDropdown
               categories={categories}
               categoryValue={categoryValue}
+              setCategoryValue={setCategoryValue}
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
+              setCategories={setCategories}
             />
           ) : null}
         </div>

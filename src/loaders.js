@@ -34,25 +34,4 @@ const dashboardLoader = async () => {
   }
 };
 
-const createFormLoader = async () => {
-  // get categories for category search
-  // this should be good for up to 10k categories in the database
-  const url = "http://localhost:3000/categories";
-
-  try {
-    const response = await fetch(url);
-
-    const result = await response.json();
-    return { result };
-  } catch (err) {
-    console.err(err.message);
-    return {
-      result: {
-        status: "error",
-        data: [],
-      },
-    };
-  }
-};
-
-export { dashboardLoader, createFormLoader };
+export { dashboardLoader };
