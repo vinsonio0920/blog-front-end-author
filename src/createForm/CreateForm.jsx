@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
-import { Form, Link } from "react-router-dom";
+import { Link, useFetcher } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const ContentInput = () => {
   const [content, setContent] = useState("");
@@ -159,11 +160,14 @@ const CategoryDropdown = ({
 };
 
 const CreateForm = () => {
+  const fetcher = useFetcher();
   const jwt = useContext(JwtContext);
   const [categoryValue, setCategoryValue] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories, setCategories] = useState(null);
+
+  const user = jwtDecode(jwt.jwtToken).user;
 
   useEffect(() => {
     // gets the categories on mount (setState will update it accordingly)
@@ -239,7 +243,8 @@ const CreateForm = () => {
   };
 
   return (
-    <Form method="PoST">
+    // also add hidden input for author
+    <fetcher.Form method="POST">
       <h1>Create New Post</h1>
       <section>
         <div>
@@ -328,6 +333,9 @@ const CreateForm = () => {
             value={JSON.stringify(selectedCategories)}
           />
         </div>
+        <div>
+          <input type="hidden" id="author" name="author" value={user.id} />
+        </div>
       </section>
       <section>
         <div className={styles.confirmationButtons}>
@@ -339,7 +347,7 @@ const CreateForm = () => {
           </button>
         </div>
       </section>
-    </Form>
+    </fetcher.Form>
   );
 };
 

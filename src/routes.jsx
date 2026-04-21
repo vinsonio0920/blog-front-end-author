@@ -1,5 +1,10 @@
 import { SignIn } from "./signIn/SignIn";
-import { dashboardAction, signInAction, signUpAction } from "./actions";
+import {
+  createFormAction,
+  dashboardAction,
+  signInAction,
+  signUpAction,
+} from "./actions";
 import { App } from "./App";
 import { ErrorPage } from "./error/ErrorPage";
 import { SignUp } from "./signUp/SignUp";
@@ -21,6 +26,7 @@ const routes = [
       },
       {
         path: "/create",
+        action: createFormAction,
         element: <CreateForm />,
       },
     ],

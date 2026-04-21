@@ -102,4 +102,30 @@ const dashboardAction = async ({ request }) => {
   }
 };
 
-export { signUpAction, signInAction, dashboardAction };
+const createFormAction = async ({ request }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/`;
+  console.log(formData);
+  console.log(formData.published === "on");
+
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
+
+  /*
+  try {
+    const formattedPost = {
+      title: formData.title,
+      description: formData.description,
+      image: formData.image,
+      categories: formData.categories,
+      content: formData.content,
+      published: formData.published,
+      author: Number(formData.author),
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+    */
+};
+
+export { signUpAction, signInAction, dashboardAction, createFormAction };
