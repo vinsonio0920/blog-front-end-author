@@ -105,27 +105,37 @@ const dashboardAction = async ({ request }) => {
 const createFormAction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
   const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/`;
-  console.log(formData);
-  console.log(formData.published === "on");
+  const categoriesArray = JSON.parse(formData.categories);
 
   const jwtToken = localStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("You must be signed in!");
 
-  /*
   try {
     const formattedPost = {
       title: formData.title,
       description: formData.description,
       image: formData.image,
-      categories: formData.categories,
+      categories: categoriesArray.map((categoryId) => Number(categoryId)),
       content: formData.content,
-      published: formData.published,
+      published: formData.published === "on",
       author: Number(formData.author),
-    }
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: new Headers({
+        Authorization: `Bearer ${jwtToken}`,
+      }),
+      body: new URLSearchParams(formattedPost),
+    });
+
+    const result = await response.json();
+    return result;
+
+    // if result is good, then redirect back to main page
   } catch (err) {
     console.error(err.message);
   }
-    */
 };
 
 export { signUpAction, signInAction, dashboardAction, createFormAction };

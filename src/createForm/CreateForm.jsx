@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
-const ContentInput = () => {
+const ContentInput = ({ formErrors }) => {
   const [content, setContent] = useState("");
 
   return (
@@ -19,41 +19,43 @@ const ContentInput = () => {
         required
         value={content}
       />
-      <Editor
-        apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
-        init={{
-          height: 500,
-          menubar: false,
-          placeholder: "Write down your thoughts!",
-          plugins: [
-            "advlist",
-            "autolink",
-            "lists",
-            "link",
-            "image",
-            "charmap",
-            "anchor",
-            "searchreplace",
-            "visualblocks",
-            "code",
-            "fullscreen",
-            "insertdatetime",
-            "media",
-            "table",
-            "preview",
-            "help",
-            "wordcount",
-          ],
-          toolbar:
-            "undo redo | blocks | " +
-            "bold italic forecolor | alignleft aligncenter " +
-            "alignright alignjustify | bullist numlist outdent indent | " +
-            "removeformat | help",
-          content_style:
-            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-        }}
-        onEditorChange={(newValue) => setContent(newValue)}
-      />
+      <div className={formErrors["content"] && styles.invalid}>
+        <Editor
+          apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+          init={{
+            height: 500,
+            menubar: false,
+            placeholder: "Write down your thoughts!",
+            plugins: [
+              "advlist",
+              "autolink",
+              "lists",
+              "link",
+              "image",
+              "charmap",
+              "anchor",
+              "searchreplace",
+              "visualblocks",
+              "code",
+              "fullscreen",
+              "insertdatetime",
+              "media",
+              "table",
+              "preview",
+              "help",
+              "wordcount",
+            ],
+            toolbar:
+              "undo redo | blocks | " +
+              "bold italic forecolor | alignleft aligncenter " +
+              "alignright alignjustify | bullist numlist outdent indent | " +
+              "removeformat | help",
+            content_style:
+              "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          }}
+          onEditorChange={(newValue) => setContent(newValue)}
+        />
+      </div>
     </>
   );
 };
@@ -159,6 +161,10 @@ const CategoryDropdown = ({
   }
 };
 
+const ErrorElement = ({ message }) => {
+  return <p className={styles.error}>{message}</p>;
+};
+
 const CreateForm = () => {
   const fetcher = useFetcher();
   const jwt = useContext(JwtContext);
@@ -168,6 +174,11 @@ const CreateForm = () => {
   const [categories, setCategories] = useState(null);
 
   const user = jwtDecode(jwt.jwtToken).user;
+  const formErrors = {};
+  // make errors into key-value pairs for easier retrieval (if any)
+  fetcher.data?.errors.map((error) => {
+    formErrors[error.path] = error.msg;
+  });
 
   useEffect(() => {
     // gets the categories on mount (setState will update it accordingly)
@@ -249,7 +260,17 @@ const CreateForm = () => {
       <section>
         <div>
           <label htmlFor="title">Title</label>
-          <input type="text" id="title" name="title" required maxLength="64" />
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            maxLength="64"
+            className={formErrors["title"] && styles.invalid}
+          />
+          {formErrors["title"] && (
+            <ErrorElement message={formErrors["title"]} />
+          )}
         </div>
         <div>
           <label htmlFor="description">Description</label>
@@ -259,47 +280,65 @@ const CreateForm = () => {
             name="description"
             required
             maxLength="254"
+            className={formErrors["description"] && styles.invalid}
           />
+          {formErrors["description"] && (
+            <ErrorElement message={formErrors["description"]} />
+          )}
         </div>
         <div>
           <label htmlFor="image">Image Link</label>
-          <input type="text" id="image" name="image" required />
+          <input
+            type="text"
+            id="image"
+            name="image"
+            required
+            className={formErrors["image"] && styles.invalid}
+          />
+          {formErrors["image"] && (
+            <ErrorElement message={formErrors["image"]} />
+          )}
         </div>
         <div>
           <label htmlFor="categorySearch" className="categoryField">
             Categories
           </label>
-          <ul className={styles.selectedUl}>
-            {selectedCategories.map((categoryId) => (
-              <li key={categoryId} className={styles.selectedCategory}>
-                {categories.find((category) => category.id === categoryId).name}
-                <button
-                  type="button"
-                  className={styles.closeButton}
-                  aria-label="Delete category"
-                  onClick={handleCategoryDeleteClick}
-                  data-id={categoryId}
-                >
-                  <span
-                    className={`material-symbols-outlined ${styles.closeIcon}`}
+          {selectedCategories.length > 0 && (
+            <ul className={styles.selectedUl}>
+              {selectedCategories.map((categoryId) => (
+                <li key={categoryId} className={styles.selectedCategory}>
+                  {
+                    categories.find((category) => category.id === categoryId)
+                      .name
+                  }
+                  <button
+                    type="button"
+                    className={styles.closeButton}
+                    aria-label="Delete category"
+                    onClick={handleCategoryDeleteClick}
+                    data-id={categoryId}
                   >
-                    close
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+                    <span
+                      className={`material-symbols-outlined ${styles.closeIcon}`}
+                    >
+                      close
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
           <input
             type="text"
             id="categorySearch"
             name="categorySearch"
-            required
-            className="categoryField"
+            className={`categoryField ${formErrors["categories"] && styles.invalid}`}
             onChange={handleCategoryChange}
             onClick={handleCategoryClick}
             value={categoryValue}
+            autoComplete="off"
           />
-          {showCategoryDropdown ? (
+          {showCategoryDropdown && (
             <CategoryDropdown
               categories={categories}
               categoryValue={categoryValue}
@@ -308,11 +347,17 @@ const CreateForm = () => {
               setSelectedCategories={setSelectedCategories}
               setCategories={setCategories}
             />
-          ) : null}
+          )}
+          {formErrors["categories"] && (
+            <ErrorElement message={formErrors["categories"]} />
+          )}
         </div>
         <div>
           <label htmlFor="content">Content</label>
-          <ContentInput />
+          <ContentInput formErrors={formErrors} />
+          {formErrors["content"] && (
+            <ErrorElement message={formErrors["content"]} />
+          )}
         </div>
         <div className={styles.publishedInput}>
           <label htmlFor="published" className={styles.checkboxContainer}>
@@ -322,9 +367,13 @@ const CreateForm = () => {
               id="published"
               name="published"
               defaultChecked
+              className={formErrors["published"] && styles.invalid}
             />
             <span className={styles.checkmark}></span>
           </label>
+          {formErrors["published"] && (
+            <ErrorElement message={formErrors["published"]} />
+          )}
         </div>
         <div>
           <input

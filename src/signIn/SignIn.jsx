@@ -44,9 +44,9 @@ const SignIn = () => {
           </Link>
           <fetcher.Form className={styles.authForm} method="POST">
             <h1>Sign In</h1>
-            {fetcher.data && !isValid ? (
+            {fetcher.data && !isValid && (
               <p className={styles.error}>{fetcher.data.errors[0].message}</p>
-            ) : null}
+            )}
             <div>
               <label htmlFor="email">Email</label>
               <input type="text" id="email" name="email" required />

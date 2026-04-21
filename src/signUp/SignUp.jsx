@@ -81,9 +81,9 @@ const SignUp = () => {
                 minLength="3"
                 maxLength="64"
               />
-              {formErrors["name"] ? (
+              {formErrors["name"] && (
                 <ErrorElement message={formErrors["name"]} />
-              ) : null}
+              )}
             </div>
             <div>
               <label htmlFor="email">Email</label>
@@ -96,9 +96,9 @@ const SignUp = () => {
                 minLength="3"
                 maxLength="254"
               />
-              {formErrors["email"] ? (
+              {formErrors["email"] && (
                 <ErrorElement message={formErrors["email"]} />
-              ) : null}
+              )}
             </div>
             <div>
               <label htmlFor="password">Password</label>
@@ -109,9 +109,9 @@ const SignUp = () => {
                 className={formErrors["password"] ? styles.invalid : null}
                 required
               />
-              {formErrors["password"] ? (
+              {formErrors["password"] && (
                 <ErrorElement message={formErrors["password"]} />
-              ) : null}
+              )}
             </div>
             <button type="submit">Sign up</button>
           </fetcher.Form>
