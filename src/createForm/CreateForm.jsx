@@ -7,8 +7,13 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
-const ContentInput = ({ formErrors }) => {
-  const [content, setContent] = useState("");
+const ContentInput = ({ formErrors, formData, setFormData }) => {
+  const handleContentChange = (newValue) => {
+    setFormData((prev) => ({
+      ...prev,
+      content: newValue,
+    }));
+  };
 
   return (
     <>
@@ -17,11 +22,12 @@ const ContentInput = ({ formErrors }) => {
         id="content"
         name="content"
         required
-        value={content}
+        value={formData.content}
       />
       <div className={formErrors["content"] && styles.invalid}>
         <Editor
           apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+          initialValue={formData.content}
           init={{
             height: 500,
             menubar: false,
@@ -53,7 +59,7 @@ const ContentInput = ({ formErrors }) => {
             content_style:
               "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
           }}
-          onEditorChange={(newValue) => setContent(newValue)}
+          onEditorChange={(newValue) => handleContentChange(newValue)}
         />
       </div>
     </>
@@ -67,6 +73,7 @@ const CategoryDropdown = ({
   selectedCategories,
   setSelectedCategories,
   setCategories,
+  setFormData,
 }) => {
   const jwtToken = localStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("You must be signed in!");
@@ -86,6 +93,12 @@ const CategoryDropdown = ({
     // add category to hidden input
     const newSelectedCategories = [...selectedCategories, Number(categoryId)];
     setSelectedCategories(newSelectedCategories);
+
+    // update formData state
+    setFormData((prev) => ({
+      ...prev,
+      categories: newSelectedCategories,
+    }));
   };
 
   const handleAddCategoryClick = async () => {
@@ -165,7 +178,7 @@ const ErrorElement = ({ message }) => {
   return <p className={styles.error}>{message}</p>;
 };
 
-const CreateForm = () => {
+const FormTab = ({ formData, setFormData }) => {
   const fetcher = useFetcher();
   const jwt = useContext(JwtContext);
   const [categoryValue, setCategoryValue] = useState("");
@@ -253,9 +266,18 @@ const CreateForm = () => {
     setSelectedCategories(newSelectedCategories);
   };
 
+  const handleFormChange = (event) => {
+    const { name, value, type, checked } = event.target;
+
+    // save form data so it persists between tabs
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   return (
-    // also add hidden input for author
-    <fetcher.Form method="POST">
+    <fetcher.Form method="POST" className="createForm">
       <h1>Create New Post</h1>
       <section>
         <div>
@@ -267,6 +289,8 @@ const CreateForm = () => {
             required
             maxLength="64"
             className={formErrors["title"] && styles.invalid}
+            value={formData.title}
+            onChange={handleFormChange}
           />
           {formErrors["title"] && (
             <ErrorElement message={formErrors["title"]} />
@@ -281,6 +305,8 @@ const CreateForm = () => {
             required
             maxLength="254"
             className={formErrors["description"] && styles.invalid}
+            value={formData.description}
+            onChange={handleFormChange}
           />
           {formErrors["description"] && (
             <ErrorElement message={formErrors["description"]} />
@@ -294,6 +320,8 @@ const CreateForm = () => {
             name="image"
             required
             className={formErrors["image"] && styles.invalid}
+            value={formData.image}
+            onChange={handleFormChange}
           />
           {formErrors["image"] && (
             <ErrorElement message={formErrors["image"]} />
@@ -337,6 +365,8 @@ const CreateForm = () => {
             onClick={handleCategoryClick}
             value={categoryValue}
             autoComplete="off"
+            value={formData.categorySearch}
+            onChange={handleFormChange}
           />
           {showCategoryDropdown && (
             <CategoryDropdown
@@ -346,6 +376,7 @@ const CreateForm = () => {
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
               setCategories={setCategories}
+              setFormData={setFormData}
             />
           )}
           {formErrors["categories"] && (
@@ -354,7 +385,11 @@ const CreateForm = () => {
         </div>
         <div>
           <label htmlFor="content">Content</label>
-          <ContentInput formErrors={formErrors} />
+          <ContentInput
+            formErrors={formErrors}
+            formData={formData}
+            setFormData={setFormData}
+          />
           {formErrors["content"] && (
             <ErrorElement message={formErrors["content"]} />
           )}
@@ -366,8 +401,8 @@ const CreateForm = () => {
               type="checkbox"
               id="published"
               name="published"
-              defaultChecked
               className={formErrors["published"] && styles.invalid}
+              defaultChecked={formData.published}
             />
             <span className={styles.checkmark}></span>
           </label>
@@ -397,6 +432,56 @@ const CreateForm = () => {
         </div>
       </section>
     </fetcher.Form>
+  );
+};
+
+const PreviewTab = () => {
+  return <p>Testing...</p>;
+};
+
+const CreateForm = () => {
+  const [currentTab, setCurrentTab] = useState("form");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    image: "",
+    categorySearch: "",
+    categories: [],
+    content: "",
+    published: true,
+    // author is already in localStorage
+  });
+
+  const handleTabClick = (event) => {
+    const tab = event.currentTarget.dataset.tab;
+
+    if (tab === "preview") {
+      // we save again mainly for the hidden inputs
+      const form = document.querySelector(".createForm");
+      const currentFormState = new FormData(form);
+
+      setFormData(Object.fromEntries(currentFormState));
+    }
+
+    setCurrentTab(tab);
+  };
+
+  return (
+    <>
+      <div className={styles.modeTabs}>
+        <button type="button" onClick={handleTabClick} data-tab="form">
+          Form
+        </button>
+        <button type="button" onClick={handleTabClick} data-tab="preview">
+          Preview
+        </button>
+      </div>
+      {currentTab === "form" ? (
+        <FormTab formData={formData} setFormData={setFormData} />
+      ) : (
+        <PreviewTab formData={formData} />
+      )}
+    </>
   );
 };
 
