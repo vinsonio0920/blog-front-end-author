@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
+import parse from "html-react-parser";
+import DOMPurify from "dompurify";
 import { Link, useFetcher } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { format } from "date-fns";
 
 const ContentInput = ({ formErrors, formData, setFormData }) => {
   const handleContentChange = (newValue) => {
@@ -435,8 +438,39 @@ const FormTab = ({ formData, setFormData }) => {
   );
 };
 
-const PreviewTab = () => {
-  return <p>Testing...</p>;
+const PreviewTab = ({ formData }) => {
+  const jwtToken = localStorage.getItem("jwtToken");
+  const decoded = jwtDecode(jwtToken);
+
+  const { title, image, content } = formData;
+  const currentDate = new Date();
+  const formattedDate = format(currentDate, "MMM d, y");
+  const author = decoded.user.name;
+
+  return (
+    <>
+      <header>
+        <p>{formattedDate}</p>
+      </header>
+      <h1>{title || "[Your Title Here]"}</h1>
+      <img
+        src={
+          image ||
+          "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500"
+        }
+        alt="Article image"
+      />
+      <p>Posted by {author}. No comments yet.</p>
+      <div className="content">
+        {content ? (
+          parse(DOMPurify.sanitize(content))
+        ) : (
+          <p>Write your thoughts here!</p>
+        )}
+      </div>
+      <h2>Comments</h2>
+    </>
+  );
 };
 
 const CreateForm = () => {
