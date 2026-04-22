@@ -105,7 +105,6 @@ const dashboardAction = async ({ request }) => {
 const createFormAction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
   const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/`;
-  const categoriesArray = JSON.parse(formData.categories);
 
   const jwtToken = localStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("You must be signed in!");
@@ -115,7 +114,10 @@ const createFormAction = async ({ request }) => {
       title: formData.title,
       description: formData.description,
       image: formData.image,
-      categories: categoriesArray.map((categoryId) => Number(categoryId)),
+      // array will be parsed back-end
+      // we parse it first so it will be recognized when we parse
+      // it back on the back-end
+      categories: JSON.stringify(JSON.parse(formData.categories)),
       content: formData.content,
       published: formData.published === "on",
       author: Number(formData.author),
@@ -130,9 +132,12 @@ const createFormAction = async ({ request }) => {
     });
 
     const result = await response.json();
-    return result;
-
-    // if result is good, then redirect back to main page
+    console.log(result);
+    if (result.status === "success") {
+      return redirect("/");
+    } else {
+      return result;
+    }
   } catch (err) {
     console.error(err.message);
   }
