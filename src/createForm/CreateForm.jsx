@@ -469,10 +469,20 @@ const CreateForm = () => {
   return (
     <>
       <div className={styles.modeTabs}>
-        <button type="button" onClick={handleTabClick} data-tab="form">
+        <button
+          type="button"
+          onClick={handleTabClick}
+          className={currentTab === "form" && styles.selected}
+          data-tab="form"
+        >
           Form
         </button>
-        <button type="button" onClick={handleTabClick} data-tab="preview">
+        <button
+          type="button"
+          onClick={handleTabClick}
+          className={currentTab === "preview" && styles.selected}
+          data-tab="preview"
+        >
           Preview
         </button>
       </div>

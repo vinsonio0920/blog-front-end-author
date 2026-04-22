@@ -20,10 +20,46 @@
   color: #00a7e1;
 }
 
+/* Mode Tabs */
+
+.modeTabs {
+  display: flex;
+  justify-content: center;
+  background-color: #f4f4f4;
+  border: 1px solid #777777;
+  border-radius: 999px;
+  width: 12rem;
+  padding: 0.1rem;
+  margin: 2rem auto;
+}
+
+.modeTabs button {
+  flex: 1;
+  background-color: transparent;
+  font-size: 1rem;
+  width: 10rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem;
+}
+
+.modeTabs button.selected {
+  font-weight: 600;
+  color: #fff;
+  background: #2354e8;
+  background: linear-gradient(
+    82deg,
+    rgba(35, 84, 232, 1) 37%,
+    rgba(145, 68, 227, 1) 100%
+  );
+}
+
+/* Create Form */
+
 form {
   max-width: 31.25rem;
   padding: 1rem clamp(1rem, 7vw, 3rem);
-  margin: 2rem auto;
+  margin: 1rem auto 2rem auto;
 }
 
 form h1 {
