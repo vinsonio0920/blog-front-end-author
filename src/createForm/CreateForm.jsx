@@ -30,7 +30,7 @@ const ContentInput = ({ formErrors, formData, setFormData }) => {
       <div className={formErrors["content"] && styles.invalid}>
         <Editor
           apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
-          initialValue={formData.content}
+          value={formData.content}
           init={{
             height: 500,
             menubar: false,
@@ -71,17 +71,14 @@ const ContentInput = ({ formErrors, formData, setFormData }) => {
 
 const CategoryDropdown = ({
   categories,
-  categoryValue,
-  setCategoryValue,
   selectedCategories,
   setSelectedCategories,
   setCategories,
+  formData,
   setFormData,
 }) => {
-  const jwtToken = localStorage.getItem("jwtToken");
-  if (!jwtToken) throw new Error("You must be signed in!");
-
   // filter down to related categories (limit 5)
+  const categoryValue = formData.categorySearch;
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(categoryValue.trim().toLowerCase()),
   );
@@ -89,6 +86,7 @@ const CategoryDropdown = ({
 
   const handleCategoryLiClick = (event) => {
     const categoryId = event.currentTarget.dataset.id;
+    const categoryName = event.currentTarget.dataset.name;
 
     // returns if category is already selected
     if (selectedCategories.includes(Number(categoryId))) return;
@@ -101,6 +99,7 @@ const CategoryDropdown = ({
     setFormData((prev) => ({
       ...prev,
       categories: newSelectedCategories,
+      categoryNames: [...prev.categoryNames, categoryName],
     }));
   };
 
@@ -146,6 +145,7 @@ const CategoryDropdown = ({
               key={category.id}
               onClick={handleCategoryLiClick}
               data-id={category.id}
+              data-name={category.name}
             >
               {category.name}
               {selectedCategories.includes(category.id) ? (
@@ -184,17 +184,9 @@ const ErrorElement = ({ message }) => {
 const FormTab = ({ formData, setFormData }) => {
   const fetcher = useFetcher();
   const jwt = useContext(JwtContext);
-  const [categoryValue, setCategoryValue] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories, setCategories] = useState(null);
-
-  const user = jwtDecode(jwt.jwtToken).user;
-  const formErrors = {};
-  // make errors into key-value pairs for easier retrieval (if any)
-  fetcher.data?.errors.map((error) => {
-    formErrors[error.path] = error.msg;
-  });
 
   useEffect(() => {
     // gets the categories on mount (setState will update it accordingly)
@@ -252,9 +244,12 @@ const FormTab = ({ formData, setFormData }) => {
     );
   }
 
-  const handleCategoryChange = (event) => {
-    setCategoryValue(event.target.value);
-  };
+  const user = jwtDecode(jwt.jwtToken).user;
+  const formErrors = {};
+  // make errors into key-value pairs for easier retrieval (if any)
+  fetcher.data?.errors.map((error) => {
+    formErrors[error.path] = error.msg;
+  });
 
   const handleCategoryClick = () => {
     setShowCategoryDropdown(true);
@@ -364,9 +359,7 @@ const FormTab = ({ formData, setFormData }) => {
             id="categorySearch"
             name="categorySearch"
             className={`categoryField ${formErrors["categories"] && styles.invalid}`}
-            onChange={handleCategoryChange}
             onClick={handleCategoryClick}
-            value={categoryValue}
             autoComplete="off"
             value={formData.categorySearch}
             onChange={handleFormChange}
@@ -374,11 +367,10 @@ const FormTab = ({ formData, setFormData }) => {
           {showCategoryDropdown && (
             <CategoryDropdown
               categories={categories}
-              categoryValue={categoryValue}
-              setCategoryValue={setCategoryValue}
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
               setCategories={setCategories}
+              formData={formData}
               setFormData={setFormData}
             />
           )}
@@ -442,7 +434,7 @@ const PreviewTab = ({ formData }) => {
   const jwtToken = localStorage.getItem("jwtToken");
   const decoded = jwtDecode(jwtToken);
 
-  const { title, image, content } = formData;
+  const { title, image, content, description, categoryNames } = formData;
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM d, y");
   const author = decoded.user.name;
@@ -461,6 +453,12 @@ const PreviewTab = ({ formData }) => {
         alt="Article image"
       />
       <p>Posted by {author}. No comments yet.</p>
+      <p>{description}</p>
+      <ul>
+        {categoryNames.map((category) => (
+          <li key={category}>{category}</li>
+        ))}
+      </ul>
       <div className="content">
         {content ? (
           parse(DOMPurify.sanitize(content))
@@ -483,20 +481,13 @@ const CreateForm = () => {
     categories: [],
     content: "",
     published: true,
+    // names of categories for the preview only
+    categoryNames: [],
     // author is already in localStorage
   });
 
   const handleTabClick = (event) => {
     const tab = event.currentTarget.dataset.tab;
-
-    if (tab === "preview") {
-      // we save again mainly for the hidden inputs
-      const form = document.querySelector(".createForm");
-      const currentFormState = new FormData(form);
-
-      setFormData(Object.fromEntries(currentFormState));
-    }
-
     setCurrentTab(tab);
   };
 
@@ -506,7 +497,7 @@ const CreateForm = () => {
         <button
           type="button"
           onClick={handleTabClick}
-          className={currentTab === "form" && styles.selected}
+          className={currentTab === "form" ? styles.selected : null}
           data-tab="form"
         >
           Form
@@ -514,7 +505,7 @@ const CreateForm = () => {
         <button
           type="button"
           onClick={handleTabClick}
-          className={currentTab === "preview" && styles.selected}
+          className={currentTab === "preview" ? styles.selected : null}
           data-tab="preview"
         >
           Preview

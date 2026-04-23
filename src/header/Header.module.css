@@ -1,6 +1,10 @@
 .homepageHeader {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
   border-bottom: 1px solid rgb(206, 206, 206);
   height: 4rem;
+  z-index: 9999;
 }
 
 .homepageHeader nav {
@@ -91,6 +95,13 @@
   .rightHeader a:hover,
   .rightHeader .signOutButton:hover {
     background-color: #abeaff;
+  }
+}
+
+/* prevents scrolling on open dropdowns for mobile */
+@media (max-width: 500px) {
+  body:has(.rightHeader.open) {
+    overflow: hidden;
   }
 }
 
