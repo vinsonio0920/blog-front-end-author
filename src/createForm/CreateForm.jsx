@@ -12,10 +12,12 @@ import { format } from "date-fns";
 
 const ContentInput = ({ formErrors, formData, setFormData }) => {
   const handleContentChange = (newValue) => {
-    setFormData((prev) => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
       content: newValue,
-    }));
+    };
+    setFormData(newFormData);
+    sessionStorage.setItem("formData", JSON.stringify(newFormData));
   };
 
   return (
@@ -70,9 +72,8 @@ const ContentInput = ({ formErrors, formData, setFormData }) => {
 };
 
 const CategoryDropdown = ({
+  jwtToken,
   categories,
-  selectedCategories,
-  setSelectedCategories,
   setCategories,
   formData,
   setFormData,
@@ -89,18 +90,22 @@ const CategoryDropdown = ({
     const categoryName = event.currentTarget.dataset.name;
 
     // returns if category is already selected
-    if (selectedCategories.includes(Number(categoryId))) return;
+    if (formData.categories.includes(Number(categoryId))) return;
 
     // add category to hidden input
-    const newSelectedCategories = [...selectedCategories, Number(categoryId)];
-    setSelectedCategories(newSelectedCategories);
-
+    const newSelectedCategories = [...formData.categories, Number(categoryId)];
     // update formData state
-    setFormData((prev) => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
+      categorySearch: "",
       categories: newSelectedCategories,
-      categoryNames: [...prev.categoryNames, categoryName],
-    }));
+      categoryObjects: [
+        ...formData.categoryObjects,
+        { id: categoryId, name: categoryName },
+      ],
+    };
+    setFormData(newFormData);
+    sessionStorage.setItem("formData", JSON.stringify(newFormData));
   };
 
   const handleAddCategoryClick = async () => {
@@ -126,11 +131,21 @@ const CategoryDropdown = ({
       // add category to selectedCategories
       const category = result.data;
       const newCategories = [...categories, category];
-      const newSelectedCategories = [...selectedCategories, category.id];
+      const newSelectedCategories = [...formData.categories, category.id];
 
+      // this updates the categories we fetched
       setCategories(newCategories);
-      setSelectedCategories(newSelectedCategories);
-      setCategoryValue("");
+      const newFormData = {
+        ...formData,
+        categories: newSelectedCategories,
+        categoryObjects: [
+          ...formData.categoryObjects,
+          { id: category.id, name: category.name },
+        ],
+        categorySearch: "",
+      };
+      setFormData(newFormData);
+      sessionStorage.setItem("formData", JSON.stringify(newFormData));
     } catch (err) {
       console.error(err.message);
     }
@@ -148,7 +163,7 @@ const CategoryDropdown = ({
               data-name={category.name}
             >
               {category.name}
-              {selectedCategories.includes(category.id) ? (
+              {formData.categories.includes(category.id) ? (
                 <span
                   className={`material-symbols-outlined ${styles.checkIcon}`}
                 >
@@ -185,7 +200,6 @@ const FormTab = ({ formData, setFormData }) => {
   const fetcher = useFetcher();
   const jwt = useContext(JwtContext);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
@@ -203,6 +217,7 @@ const FormTab = ({ formData, setFormData }) => {
           throw new Error("Problem occurred while fetching categories");
 
         setCategories(result.data);
+        console.log("Good!");
       } catch (err) {
         console.error(err.message);
         setCategories("error");
@@ -258,20 +273,32 @@ const FormTab = ({ formData, setFormData }) => {
   const handleCategoryDeleteClick = (event) => {
     const categoryId = event.currentTarget.dataset.id;
 
-    const newSelectedCategories = selectedCategories.filter(
+    const newSelectedCategories = formData.categories.filter(
       (currentCategoryId) => currentCategoryId !== Number(categoryId),
     );
-    setSelectedCategories(newSelectedCategories);
+
+    const newCategoryObjects = formData.categoryObjects.filter(
+      (category) => Number(category.id) !== Number(categoryId),
+    );
+    const newFormData = {
+      ...formData,
+      categories: newSelectedCategories,
+      categoryObjects: newCategoryObjects,
+    };
+    setFormData(newFormData);
+    sessionStorage.setItem("formData", JSON.stringify(newFormData));
   };
 
   const handleFormChange = (event) => {
     const { name, value, type, checked } = event.target;
 
     // save form data so it persists between tabs
-    setFormData((prev) => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
       [name]: type === "checkbox" ? checked : value,
-    }));
+    };
+    setFormData(newFormData);
+    sessionStorage.setItem("formData", JSON.stringify(newFormData));
   };
 
   return (
@@ -329,14 +356,13 @@ const FormTab = ({ formData, setFormData }) => {
           <label htmlFor="categorySearch" className="categoryField">
             Categories
           </label>
-          {selectedCategories.length > 0 && (
+          {formData.categories.length > 0 && (
             <ul className={styles.selectedUl}>
-              {selectedCategories.map((categoryId) => (
+              {formData.categories.map((categoryId) => (
                 <li key={categoryId} className={styles.selectedCategory}>
-                  {
+                  {categories &&
                     categories.find((category) => category.id === categoryId)
-                      .name
-                  }
+                      .name}
                   <button
                     type="button"
                     className={styles.closeButton}
@@ -366,9 +392,8 @@ const FormTab = ({ formData, setFormData }) => {
           />
           {showCategoryDropdown && (
             <CategoryDropdown
+              jwtToken={jwt.jwtToken}
               categories={categories}
-              selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
               setCategories={setCategories}
               formData={formData}
               setFormData={setFormData}
@@ -409,7 +434,7 @@ const FormTab = ({ formData, setFormData }) => {
           <input
             type="hidden"
             name="categories"
-            value={JSON.stringify(selectedCategories)}
+            value={JSON.stringify(formData.categories)}
           />
         </div>
         <div>
@@ -434,7 +459,7 @@ const PreviewTab = ({ formData }) => {
   const jwtToken = localStorage.getItem("jwtToken");
   const decoded = jwtDecode(jwtToken);
 
-  const { title, image, content, description, categoryNames } = formData;
+  const { title, image, content, description, categoryObjects } = formData;
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM d, y");
   const author = decoded.user.name;
@@ -455,8 +480,8 @@ const PreviewTab = ({ formData }) => {
       <p>Posted by {author}. No comments yet.</p>
       <p>{description}</p>
       <ul>
-        {categoryNames.map((category) => (
-          <li key={category}>{category}</li>
+        {categoryObjects.map((category) => (
+          <li key={category.id}>{category.name}</li>
         ))}
       </ul>
       <div className="content">
@@ -473,18 +498,21 @@ const PreviewTab = ({ formData }) => {
 
 const CreateForm = () => {
   const [currentTab, setCurrentTab] = useState("form");
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    image: "",
-    categorySearch: "",
-    categories: [],
-    content: "",
-    published: true,
-    // names of categories for the preview only
-    categoryNames: [],
-    // author is already in localStorage
-  });
+  // gets existing formData if any,
+  const [formData, setFormData] = useState(
+    JSON.parse(sessionStorage.getItem("formData")) ?? {
+      title: "",
+      description: "",
+      image: "",
+      categorySearch: "",
+      categories: [],
+      content: "",
+      published: true,
+      // names and id of categories for the preview only
+      categoryObjects: [],
+      // author is already in localStorage
+    },
+  );
 
   const handleTabClick = (event) => {
     const tab = event.currentTarget.dataset.tab;

@@ -132,7 +132,7 @@ const createFormAction = async ({ request }) => {
     });
 
     const result = await response.json();
-    console.log(result);
+    // delete sessionStorage since it's successful
     if (result.status === "success") {
       return redirect("/");
     } else {
