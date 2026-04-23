@@ -1,0 +1,68 @@
+.preview {
+  line-height: 1.5;
+  max-width: 75ch;
+  margin: 3rem clamp(1rem, 6vw, 5rem);
+}
+
+.preview * {
+  margin-bottom: 1rem;
+}
+
+.date {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(90, 90, 90);
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.image {
+  min-width: 15.625rem;
+  width: 100%;
+  min-height: 5rem;
+  max-height: 25rem;
+  object-fit: cover;
+}
+
+.author {
+  font-style: italic;
+  font-weight: 600;
+}
+
+.categoriesContainer {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.categoryLink {
+  display: block;
+  font-weight: 600;
+  text-decoration: none;
+  color: #000;
+  border: 1.5px solid #000;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.content {
+  margin-bottom: 2rem;
+}
+
+.content * {
+  margin-bottom: 1.25rem;
+}
+
+.commentsHeading {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+@media (min-width: 860px) {
+  .preview {
+    margin: 3rem auto;
+  }
+}

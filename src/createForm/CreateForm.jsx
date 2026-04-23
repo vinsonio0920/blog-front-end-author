@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
+import previewStyles from "./Preview.module.css";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { Link, useFetcher } from "react-router-dom";
@@ -463,36 +464,45 @@ const PreviewTab = ({ formData }) => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM d, y");
   const author = decoded.user.name;
+  console.log(formData.image);
 
   return (
-    <>
+    <section className={previewStyles.preview}>
       <header>
-        <p>{formattedDate}</p>
+        <p className={previewStyles.date}>{formattedDate}</p>
       </header>
-      <h1>{title || "[Your Title Here]"}</h1>
+      <h1 className={previewStyles.title}>{title || "[Your Title Here]"}</h1>
       <img
         src={
           image ||
           "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500"
         }
         alt="Article image"
+        className={previewStyles.image}
       />
-      <p>Posted by {author}. No comments yet.</p>
-      <p>{description}</p>
-      <ul>
+      <p className={previewStyles.author}>
+        Posted by {author}. No comments yet.
+      </p>
+      <p className={previewStyles.description}>{description}</p>
+      <ul className={previewStyles.categoriesContainer}>
         {categoryObjects.map((category) => (
-          <li key={category.id}>{category.name}</li>
+          <li key={category.id} className={previewStyles.categoryLink}>
+            {category.name}
+          </li>
         ))}
       </ul>
-      <div className="content">
+      <div className={previewStyles.content}>
         {content ? (
           parse(DOMPurify.sanitize(content))
         ) : (
           <p>Write your thoughts here!</p>
         )}
       </div>
-      <h2>Comments</h2>
-    </>
+      <div>
+        <h2 className={previewStyles.commentsHeading}>Comments</h2>
+        <p>No comments yet. Start the discussion!</p>
+      </div>
+    </section>
   );
 };
 
