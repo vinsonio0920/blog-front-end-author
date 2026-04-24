@@ -68,14 +68,7 @@ const signInAction = async ({ request }) => {
   }
 };
 
-const dashboardAction = async ({ request }) => {
-  const formData = Object.fromEntries(await request.formData());
-  const post = JSON.parse(formData.post);
-  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${post.id}`;
-
-  const jwtToken = localStorage.getItem("jwtToken");
-  if (!jwtToken) throw new Error("You must be signed in!");
-
+const publishAction = async (url, post, jwtToken) => {
   try {
     const formattedCategories = post.categories.map((category) => category.id);
     const formattedPost = {
@@ -100,6 +93,39 @@ const dashboardAction = async ({ request }) => {
     return result;
   } catch (err) {
     console.error(err.message);
+  }
+};
+
+const deleteAction = async (url, post, jwtToken) => {
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: new Headers({
+        Authorization: `Bearer ${jwtToken}`,
+      }),
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+const dashboardAction = async ({ request }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const post = JSON.parse(formData.post);
+  const action = formData.action;
+  console.log(action);
+  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${post.id}`;
+
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
+
+  if (action === "publish") {
+    return publishAction(url, post, jwtToken);
+  } else if (action === "delete") {
+    return deleteAction(url, post, jwtToken);
   }
 };
 

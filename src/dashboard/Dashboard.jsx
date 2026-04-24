@@ -22,6 +22,7 @@ const ConfirmationModal = ({
 
   const handleCancelClick = () => {
     setTargetedPost(null);
+    setActionType(null);
   };
 
   let confirmationText = null;

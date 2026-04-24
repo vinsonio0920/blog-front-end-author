@@ -63,6 +63,7 @@
   border: none;
   border-radius: 5px;
   padding: 0.25rem 0.5rem !important;
+  z-index: 999 !important;
 }
 
 .postArticle .deleteButton:hover {
