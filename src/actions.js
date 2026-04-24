@@ -97,7 +97,6 @@ const dashboardAction = async ({ request }) => {
     });
 
     const result = await response.json();
-    console.log(result);
     return result;
   } catch (err) {
     console.error(err.message);
@@ -110,7 +109,6 @@ const createFormAction = async ({ request }) => {
 
   const jwtToken = localStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("You must be signed in!");
-  console.log(formData.categories);
 
   try {
     const formattedPost = {
@@ -135,8 +133,10 @@ const createFormAction = async ({ request }) => {
     });
 
     const result = await response.json();
-    // delete sessionStorage since it's successful
+
     if (result.status === "success") {
+      // delete sessionStorage since it's successful
+      sessionStorage.removeItem("formData");
       return redirect("/");
     } else {
       return result;
@@ -146,8 +146,54 @@ const createFormAction = async ({ request }) => {
   }
 };
 
-const editFormAction = async ({ request }) => {
+const editFormAction = async ({ params, request }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${params.postId}`;
 
-}
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
 
-export { signUpAction, signInAction, dashboardAction, createFormAction, editFormAction };
+  try {
+    const formattedPost = {
+      title: formData.title,
+      description: formData.description,
+      image: formData.image,
+      // array will be parsed back-end
+      // we parse it first so it will be recognized when we parse
+      // it back on the back-end
+      categories: JSON.stringify(JSON.parse(formData.categories)),
+      content: formData.content,
+      published: formData.published === "on",
+      author: Number(formData.author),
+    };
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: new Headers({
+        Authorization: `Bearer ${jwtToken}`,
+      }),
+      body: new URLSearchParams(formattedPost),
+    });
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      // delete sessionStorage since it's successful
+      sessionStorage.removeItem(`formData${params.postId}`);
+
+      return redirect("/");
+    } else {
+      return result;
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export {
+  signUpAction,
+  signInAction,
+  dashboardAction,
+  createFormAction,
+  editFormAction,
+};

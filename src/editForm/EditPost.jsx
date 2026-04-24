@@ -224,7 +224,6 @@ const FormTab = ({ jwt, formData, setFormData }) => {
           throw new Error("Problem occurred while fetching categories");
 
         setCategories(result.data);
-        console.log("Good!");
       } catch (err) {
         console.error(err.message);
         setCategories("error");

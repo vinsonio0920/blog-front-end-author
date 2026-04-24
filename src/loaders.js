@@ -46,7 +46,6 @@ const postLoader = async ({ params }) => {
       const response = await fetch(url);
 
       const result = await response.json();
-      console.log(result.data.authorId === userId);
       if (result.data.authorId === userId) {
         return { result };
       } else {
