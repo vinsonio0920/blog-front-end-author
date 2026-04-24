@@ -21,3 +21,26 @@ body:has(.overlay) {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
+
+/* error styling */
+.errorContainer {
+  min-height: calc(100vh - 4rem);
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.errorPara {
+  text-align: center;
+  color: #ff0000;
+  padding-bottom: 0;
+  margin: -4rem 0 1rem 0;
+}
+
+.errorContainer a {
+  color: #00a7e1;
+}

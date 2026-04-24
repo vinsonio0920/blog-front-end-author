@@ -53,10 +53,7 @@ const postLoader = async ({ params }) => {
         return {
           result: {
             status: "error",
-            error: {
-              type: "fetch",
-              message: "You do not have access to this post.",
-            },
+            error: "forbidden",
           },
         };
       }
@@ -65,11 +62,7 @@ const postLoader = async ({ params }) => {
       return {
         result: {
           status: "error",
-          error: {
-            type: "fetch",
-            message:
-              "There was an error trying to get the post data. Please try again later.",
-          },
+          data: [],
         },
       };
     }
