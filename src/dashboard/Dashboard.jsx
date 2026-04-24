@@ -4,32 +4,52 @@ import { useContext, useEffect, useState } from "react";
 import { JwtContext } from "../jwt-context";
 import { format } from "date-fns";
 
-const ConfirmationModal = ({ targetedPost, setTargetedPost }) => {
+const ConfirmationModal = ({
+  targetedPost,
+  setTargetedPost,
+  actionType,
+  setActionType,
+}) => {
   const fetcher = useFetcher();
 
   useEffect(() => {
     if (fetcher.data?.status === "success") {
-      // hide modal and reset targetedPost
+      // hide modal and reset targetedPost and actiontype
       setTargetedPost(null);
+      setActionType(null);
     }
-  }, [fetcher, setTargetedPost]);
+  }, [fetcher, setTargetedPost, setActionType]);
 
   const handleCancelClick = () => {
     setTargetedPost(null);
   };
+
+  let confirmationText = null;
+  let submitText = null;
+
+  if (actionType === "publish") {
+    confirmationText = `
+        Do you want to ${targetedPost.published ? "unpublish" : "publish"} this
+        post?`;
+
+    submitText = targetedPost.published ? "unpublish" : "publish";
+  } else {
+    confirmationText = "Do you want to delete this post?";
+
+    submitText = "delete";
+  }
 
   return (
     <>
       <div className="overlay" onClick={handleCancelClick}></div>
       <fetcher.Form method="POST" className={styles.confirmationModal}>
         <h1>Are you sure?</h1>
-        <p>
-          Do you want to {targetedPost.published ? "unpublish" : "publish"} this
-          post?
-        </p>
+        <p>{confirmationText}</p>
         {fetcher.data?.status === "error" ? (
           <p className={styles.error}>
-            An error occurred updating the post. Please try again later.
+            An error occurred{" "}
+            {actionType === "publish" ? "updating" : "deleting"} the post.
+            Please try again later.
           </p>
         ) : null}
         <div className={styles.confirmationButtons}>
@@ -41,7 +61,7 @@ const ConfirmationModal = ({ targetedPost, setTargetedPost }) => {
             Cancel
           </button>
           <button type="submit" className={styles.confirmButton}>
-            {targetedPost.published ? "unpublish" : "publish"}
+            {submitText}
           </button>
         </div>
         <input
@@ -50,21 +70,37 @@ const ConfirmationModal = ({ targetedPost, setTargetedPost }) => {
           name="post"
           value={JSON.stringify(targetedPost)}
         />
+        <input type="hidden" id="action" name="action" value={actionType} />
       </fetcher.Form>
     </>
   );
 };
 
-const Post = ({ post, setTargetedPost }) => {
+const Post = ({ post, setTargetedPost, setActionType }) => {
   const formattedDate = format(post.created, "MMM d, y");
+
+  const handleDeleteClick = () => {
+    setTargetedPost(post);
+    setActionType("delete");
+  };
 
   const handlePublishClick = () => {
     setTargetedPost(post);
+    setActionType("publish");
   };
 
   return (
     <article className={styles.postArticle}>
       <div className={styles.articleContent}>
+        <button
+          type="button"
+          className={styles.deleteButton}
+          aria-label="delete"
+          onClick={handleDeleteClick}
+        >
+          <span className="material-symbols-outlined">delete</span>
+        </button>
+
         <Link to={`/posts/${post.id}`} className={styles.articleLink}></Link>
         <img
           src={post.image}
@@ -106,6 +142,7 @@ const Dashboard = () => {
   const jwt = useContext(JwtContext);
   const [page, setPage] = useState(1);
   const [targetedPost, setTargetedPost] = useState(null);
+  const [actionType, setActionType] = useState(null);
   const { result } = useLoaderData();
 
   const posts = result.data;
@@ -156,6 +193,8 @@ const Dashboard = () => {
         <ConfirmationModal
           targetedPost={targetedPost}
           setTargetedPost={setTargetedPost}
+          actionType={actionType}
+          setActionType={setActionType}
         />
       ) : null}
       <div className={styles.dashboardContainer}>
@@ -163,7 +202,11 @@ const Dashboard = () => {
         <ul className={styles.postsUl}>
           {pagePosts.map((post) => (
             <li key={post.id}>
-              <Post post={post} setTargetedPost={setTargetedPost} />
+              <Post
+                post={post}
+                setTargetedPost={setTargetedPost}
+                setActionType={setActionType}
+              />
             </li>
           ))}
         </ul>

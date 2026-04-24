@@ -54,6 +54,30 @@
   margin-bottom: 3rem;
 }
 
+.postArticle .deleteButton {
+  position: absolute !important;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: #fff;
+  background-color: #f44336;
+  border: none;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem !important;
+}
+
+.postArticle .deleteButton:hover {
+  background-color: #f55044;
+}
+
+.postArticle .deleteButton:active {
+  background-color: #f44336;
+}
+
+.postArticle .deleteButton span {
+  font-size: 1.5rem;
+  padding: 0;
+}
+
 .postArticle *:not(.articleLink) {
   position: relative;
   z-index: 998;
