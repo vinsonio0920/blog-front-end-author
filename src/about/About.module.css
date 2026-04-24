@@ -1,0 +1,30 @@
+.aboutContainer {
+  line-height: 1.5;
+  max-width: 75ch;
+  margin: 3rem clamp(1rem, 6vw, 5rem);
+}
+
+.aboutContainer * {
+  margin-bottom: 1rem;
+}
+
+.title {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.image {
+  display: block;
+  margin: 0 auto 2rem auto;
+}
+
+.quote {
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (min-width: 860px) {
+  .aboutContainer {
+    margin: 3rem auto;
+  }
+}

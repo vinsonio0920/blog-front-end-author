@@ -3,10 +3,14 @@ import { brickWall } from "../assets";
 
 const About = () => {
   return (
-    <>
-      <h1>Brick by Brick</h1>
-      <img src={brickWall} alt="A photo of a brick wall" />
-      <p>
+    <div className={styles.aboutContainer}>
+      <h1 className={styles.title}>Brick by Brick</h1>
+      <img
+        src={brickWall}
+        alt="A photo of a brick wall"
+        className={styles.image}
+      />
+      <p className={styles.quote}>
         "The first and greatest victory is to conquer yourself; to be conquered
         by yourself is of all things most shameful and vile." - Plato
       </p>
@@ -72,7 +76,7 @@ const About = () => {
           great day.
         </p>
       </div>
-    </>
+    </div>
   );
 };
 
