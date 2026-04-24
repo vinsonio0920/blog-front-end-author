@@ -9,8 +9,9 @@ import { App } from "./App";
 import { ErrorPage } from "./error/ErrorPage";
 import { SignUp } from "./signUp/SignUp";
 import { Dashboard } from "./dashboard/Dashboard";
-import { dashboardLoader } from "./loaders";
+import { dashboardLoader, postLoader } from "./loaders";
 import { CreateForm } from "./createForm/CreateForm";
+import { EditForm } from "../EditForm/EditPost";
 
 const routes = [
   {
@@ -28,6 +29,11 @@ const routes = [
         path: "/create",
         action: createFormAction,
         element: <CreateForm />,
+      },
+      {
+        path: "/posts/:postId",
+        element: <EditForm />,
+        loader: postLoader,
       },
     ],
   },

@@ -7,7 +7,7 @@ const dashboardLoader = async () => {
   if (jwtToken) {
     const decoded = jwtDecode(jwtToken);
     const userId = decoded.user.id;
-    const url = `http://localhost:3000/posts?userId=${userId}`;
+    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts?userId=${userId}`;
 
     try {
       const response = await fetch(url);
@@ -16,7 +16,7 @@ const dashboardLoader = async () => {
       const result = await response.json();
       return { result };
     } catch (err) {
-      console.err(err.message);
+      console.error(err.message);
       return {
         result: {
           status: "error",
@@ -34,4 +34,57 @@ const dashboardLoader = async () => {
   }
 };
 
-export { dashboardLoader };
+const postLoader = async ({ params }) => {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  if (jwtToken) {
+    const decoded = jwtDecode(jwtToken);
+    const userId = decoded.user.id;
+    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${params.postId}`;
+
+    try {
+      const response = await fetch(url);
+
+      const result = await response.json();
+      console.log(result.data.authorId === userId);
+      if (result.data.authorId === userId) {
+        return { result };
+      } else {
+        return {
+          result: {
+            status: "error",
+            error: {
+              type: "fetch",
+              message: "You do not have access to this post.",
+            },
+          },
+        };
+      }
+    } catch (err) {
+      console.error(err.message);
+      return {
+        result: {
+          status: "error",
+          error: {
+            type: "fetch",
+            message:
+              "There was an error trying to get the post data. Please try again later.",
+          },
+        },
+      };
+    }
+    // Make sure that the post belongs to the user
+  } else {
+    return {
+      result: {
+        status: "error",
+        error: {
+          type: "auth",
+          message: "You are not currently signed in.",
+        },
+      },
+    };
+  }
+};
+
+export { dashboardLoader, postLoader };
