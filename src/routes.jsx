@@ -13,6 +13,7 @@ import { Dashboard } from "./dashboard/Dashboard";
 import { dashboardLoader, postLoader } from "./loaders";
 import { CreateForm } from "./createForm/CreateForm";
 import { EditForm } from "./editForm/EditPost";
+import { About } from "./about/About";
 
 const routes = [
   {
@@ -36,6 +37,10 @@ const routes = [
         action: editFormAction,
         element: <EditForm />,
         loader: postLoader,
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
     ],
   },
