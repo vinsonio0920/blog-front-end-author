@@ -245,15 +245,15 @@ const FormTab = ({ formData, setFormData }) => {
 
   if (!jwt.jwtToken) {
     return (
-      <div className={styles.errorContainer}>
-        <p className={styles.errorPara}>You are not currently signed in.</p>
+      <div className="errorContainer">
+        <p className="errorPara">You are not currently signed in.</p>
         <Link to="/sign-in">Sign in now</Link>
       </div>
     );
   } else if (categories === "error") {
     return (
-      <div className={styles.errorContainer}>
-        <p className={styles.errorPara}>
+      <div className="errorContainer">
+        <p className="errorPara">
           There was an error getting the categories. Please try again later.
         </p>
       </div>
@@ -464,7 +464,6 @@ const PreviewTab = ({ formData }) => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM d, y");
   const author = decoded.user.name;
-  console.log(formData.image);
 
   return (
     <section className={previewStyles.preview}>

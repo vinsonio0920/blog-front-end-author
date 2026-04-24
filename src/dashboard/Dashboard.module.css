@@ -1,9 +1,7 @@
-.errorContainer,
 .constructionContainer {
   min-height: calc(100vh - 4rem);
 }
 
-.errorContainer,
 .emptyDiv {
   display: flex;
   flex-direction: column;
@@ -11,7 +9,6 @@
   align-items: center;
 }
 
-.errorPara,
 .emptyDiv p {
   text-align: center;
   color: #ff0000;
@@ -19,7 +16,6 @@
   margin: -4rem 0 1rem 0;
 }
 
-.errorContainer a,
 .emptyDiv a {
   color: #00a7e1;
 }

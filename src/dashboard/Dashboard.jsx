@@ -133,8 +133,8 @@ const Dashboard = () => {
 
   if (!jwt.jwtToken) {
     return (
-      <div className={styles.errorContainer}>
-        <p className={styles.errorPara}>You are not currently signed in.</p>
+      <div className="errorContainer">
+        <p className="errorPara">You are not currently signed in.</p>
         <Link to="/sign-in">Sign in now</Link>
       </div>
     );
