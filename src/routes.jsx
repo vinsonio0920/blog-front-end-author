@@ -2,6 +2,7 @@ import { SignIn } from "./signIn/SignIn";
 import {
   createFormAction,
   dashboardAction,
+  editFormAction,
   signInAction,
   signUpAction,
 } from "./actions";
@@ -11,7 +12,7 @@ import { SignUp } from "./signUp/SignUp";
 import { Dashboard } from "./dashboard/Dashboard";
 import { dashboardLoader, postLoader } from "./loaders";
 import { CreateForm } from "./createForm/CreateForm";
-import { EditForm } from "../EditForm/EditPost";
+import { EditForm } from "./editForm/EditPost";
 
 const routes = [
   {
@@ -32,6 +33,7 @@ const routes = [
       },
       {
         path: "/posts/:postId",
+        action: editFormAction,
         element: <EditForm />,
         loader: postLoader,
       },

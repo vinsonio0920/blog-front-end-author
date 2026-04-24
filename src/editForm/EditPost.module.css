@@ -1,0 +1,304 @@
+/* Mode Tabs */
+
+.modeTabs {
+  display: flex;
+  justify-content: center;
+  background-color: #f4f4f4;
+  border: 1px solid #777777;
+  border-radius: 999px;
+  width: 12rem;
+  padding: 0.1rem;
+  margin: 2rem auto;
+}
+
+.modeTabs button {
+  flex: 1;
+  background-color: transparent;
+  font-size: 1rem;
+  width: 10rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem;
+}
+
+.modeTabs button.selected {
+  font-weight: 600;
+  color: #fff;
+  background: #2354e8;
+  background: linear-gradient(
+    82deg,
+    rgba(35, 84, 232, 1) 37%,
+    rgba(145, 68, 227, 1) 100%
+  );
+}
+
+/* Create Form */
+
+form {
+  max-width: 31.25rem;
+  padding: 1rem clamp(1rem, 7vw, 3rem);
+  margin: 1rem auto 2rem auto;
+}
+
+form h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+label {
+  display: block;
+  padding-bottom: 0.5rem;
+}
+
+label[for="published"] {
+  margin-top: 1.5rem;
+}
+
+input[type="text"] {
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.publishedInput {
+  display: flex;
+  align-items: center;
+}
+
+.publishedInput label {
+  padding-bottom: 0;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: block;
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-left: 1rem;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkmark:hover {
+  cursor: pointer;
+}
+
+.checkmark:hover {
+  background-color: #f4f4f4;
+}
+
+.checkboxContainer input:checked ~ .checkmark {
+  background-color: #00a7e1;
+  border: none;
+}
+
+.checkboxContainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkboxContainer .checkmark:after {
+  left: 0.5rem;
+  top: 0.3rem;
+  width: 0.5rem;
+  height: 0.75rem;
+  border: solid #fff;
+  border-width: 0 0.2rem 0.2rem 0;
+  transform: rotate(45deg);
+}
+
+input[id="categorySearch"] {
+  max-width: 30rem;
+}
+
+.categoriesDropdown {
+  position: relative;
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  max-width: 30rem;
+  margin: -1.25rem 0 1.5rem 0;
+  z-index: 99;
+}
+
+.categoriesList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.categoriesList li,
+.categoriesDropdown p,
+.categoriesDropdown .createButton {
+  padding: 0.75rem 1rem;
+}
+
+.categoriesList li .checkIcon {
+  font-size: 1rem;
+}
+
+.categoriesList li:hover {
+  cursor: pointer;
+  background-color: #abeaff;
+}
+
+.categoriesDropdown .createButton {
+  display: flex;
+  align-items: center;
+  text-align: start;
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+}
+
+.categoriesDropdown .createButton:hover {
+  background-color: #f4f4f4;
+}
+
+.categoriesDropdown .createButton span {
+  margin-right: 0.5rem;
+}
+
+.selectedUl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 45rem;
+  margin: 0.25rem 0 0.75rem 0;
+}
+
+.selectedCategory {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #00a7e1;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem;
+}
+
+.selectedCategory .closeButton {
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-left: 0.5rem;
+}
+
+.selectedCategory .closeIcon {
+  position: relative;
+  top: 0.11rem;
+  font-size: 1rem;
+}
+
+.confirmationButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.confirmationButtons button {
+  display: block;
+  font-size: 1rem;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+}
+
+.confirmationButtons .cancelButton {
+  background-color: #777777;
+  margin-right: 1rem;
+}
+
+.confirmationButtons .cancelButton:hover {
+  background-color: #7d7d7d;
+}
+
+.confirmationButtons .cancelButton:active {
+  background-color: #777777;
+}
+
+.confirmationButtons .confirmButton {
+  text-transform: capitalize;
+  background-color: #f44336;
+}
+
+.confirmationButtons .confirmButton:hover {
+  background-color: #f55044;
+}
+
+.confirmationButtons .confirmButton:active {
+  background-color: #f44336;
+}
+
+label[for="content"] ~ .invalid {
+  border-radius: 10px;
+}
+
+label[for="content"] ~ .error {
+  margin: 1.4rem 0 0rem 0;
+}
+
+.invalid {
+  outline: 1px solid red;
+  border: none;
+}
+
+.error {
+  color: red;
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 600px) {
+  form {
+    max-width: 57.5rem;
+  }
+
+  form h1 {
+    margin-bottom: 3rem;
+  }
+
+  form label {
+    font-size: 1.1rem;
+    padding-bottom: 1rem;
+  }
+
+  .selectedUl {
+    gap: 0.25rem 0.5rem;
+  }
+
+  .selectedCategory {
+    font-size: 0.95rem;
+    padding: 0.35rem 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .error {
+    margin-top: -0.5rem;
+  }
+}

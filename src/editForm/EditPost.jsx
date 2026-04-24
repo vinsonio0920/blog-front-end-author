@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useFetcher, useLoaderData } from "react-router-dom";
-import { JwtContext } from "../src/jwt-context";
+import { JwtContext } from "../jwt-context.js";
 import styles from "./EditPost.module.css";
 import { jwtDecode } from "jwt-decode";
+import { Editor } from "@tinymce/tinymce-react";
+import { Preview } from "../preview/Preview.jsx";
 
 // we will have multiple sessionStorage data for each edited post!
 // that we do don't have to worry about users losing data
@@ -14,7 +16,10 @@ const ContentInput = ({ formErrors, formData, setFormData }) => {
       content: newValue,
     };
     setFormData(newFormData);
-    sessionStorage.setItem("formData", JSON.stringify(newFormData));
+    sessionStorage.setItem(
+      `formData${formData.id}`,
+      JSON.stringify(newFormData),
+    );
   };
 
   return (
@@ -102,7 +107,10 @@ const CategoryDropdown = ({
       ],
     };
     setFormData(newFormData);
-    sessionStorage.setItem("formData", JSON.stringify(newFormData));
+    sessionStorage.setItem(
+      `formData${formData.id}`,
+      JSON.stringify(newFormData),
+    );
   };
 
   const handleAddCategoryClick = async () => {
@@ -142,7 +150,10 @@ const CategoryDropdown = ({
         categorySearch: "",
       };
       setFormData(newFormData);
-      sessionStorage.setItem("formData", JSON.stringify(newFormData));
+      sessionStorage.setItem(
+        `formData${formData.id}`,
+        JSON.stringify(newFormData),
+      );
     } catch (err) {
       console.error(err.message);
     }
@@ -193,9 +204,8 @@ const ErrorElement = ({ message }) => {
   return <p className={styles.error}>{message}</p>;
 };
 
-const FormTab = ({ formData, setFormData }) => {
+const FormTab = ({ jwt, formData, setFormData }) => {
   const fetcher = useFetcher();
-  const jwt = useContext(JwtContext);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [categories, setCategories] = useState(null);
 
@@ -283,7 +293,10 @@ const FormTab = ({ formData, setFormData }) => {
       categoryObjects: newCategoryObjects,
     };
     setFormData(newFormData);
-    sessionStorage.setItem("formData", JSON.stringify(newFormData));
+    sessionStorage.setItem(
+      `formData${formData.id}`,
+      JSON.stringify(newFormData),
+    );
   };
 
   const handleFormChange = (event) => {
@@ -295,12 +308,15 @@ const FormTab = ({ formData, setFormData }) => {
       [name]: type === "checkbox" ? checked : value,
     };
     setFormData(newFormData);
-    sessionStorage.setItem("formData", JSON.stringify(newFormData));
+    sessionStorage.setItem(
+      `formData${formData.id}`,
+      JSON.stringify(newFormData),
+    );
   };
 
   return (
     <fetcher.Form method="POST" className="createForm">
-      <h1>Create New Post</h1>
+      <h1>Edit Post</h1>
       <section>
         <div>
           <label htmlFor="title">Title</label>
@@ -455,6 +471,22 @@ const FormTab = ({ formData, setFormData }) => {
 const EditForm = () => {
   const jwt = useContext(JwtContext);
   const { result } = useLoaderData();
+  const postData = result.data;
+  const [currentTab, setCurrentTab] = useState("form");
+  const [formData, setFormData] = useState(
+    JSON.parse(sessionStorage.getItem(`formData${result.data.id}`)) ?? {
+      id: postData.id,
+      title: postData.title,
+      description: postData.description,
+      image: postData.image,
+      categorySearch: "",
+      categories: postData.categories.map((category) => category.id),
+      content: postData.content,
+      published: postData.published,
+      // names and id of categories for the preview only
+      categoryObjects: postData.categories,
+    },
+  );
 
   if (!jwt.jwtToken) {
     return (
@@ -480,6 +512,39 @@ const EditForm = () => {
       </div>
     );
   }
+
+  const handleTabClick = (event) => {
+    const tab = event.currentTarget.dataset.tab;
+    setCurrentTab(tab);
+  };
+
+  return (
+    <>
+      <div className={styles.modeTabs}>
+        <button
+          type="button"
+          onClick={handleTabClick}
+          className={currentTab === "form" ? styles.selected : null}
+          data-tab="form"
+        >
+          Form
+        </button>
+        <button
+          type="button"
+          onClick={handleTabClick}
+          className={currentTab === "preview" ? styles.selected : null}
+          data-tab="preview"
+        >
+          Preview
+        </button>
+      </div>
+      {currentTab === "form" ? (
+        <FormTab jwt={jwt} formData={formData} setFormData={setFormData} />
+      ) : (
+        <Preview formData={formData} />
+      )}
+    </>
+  );
 };
 
 export { EditForm };
