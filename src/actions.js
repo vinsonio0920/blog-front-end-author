@@ -71,18 +71,18 @@ const signInAction = async ({ request }) => {
 const dashboardAction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
   const post = JSON.parse(formData.post);
-  console.log(post.id);
   const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${post.id}`;
 
   const jwtToken = localStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("You must be signed in!");
 
   try {
+    const formattedCategories = post.categories.map((category) => category.id);
     const formattedPost = {
       title: post.title,
       image: post.image,
       content: post.content,
-      categories: JSON.stringify(post.categories),
+      categories: JSON.stringify(formattedCategories),
       description: post.description,
       published: !post.published,
       author: post.author,
@@ -97,6 +97,7 @@ const dashboardAction = async ({ request }) => {
     });
 
     const result = await response.json();
+    console.log(result);
     return result;
   } catch (err) {
     console.error(err.message);
@@ -109,6 +110,7 @@ const createFormAction = async ({ request }) => {
 
   const jwtToken = localStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("You must be signed in!");
+  console.log(formData.categories);
 
   try {
     const formattedPost = {

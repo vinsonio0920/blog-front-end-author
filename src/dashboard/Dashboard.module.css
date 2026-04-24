@@ -56,7 +56,7 @@
 
 .postArticle *:not(.articleLink) {
   position: relative;
-  z-index: 999;
+  z-index: 998;
 }
 
 .articleContent {
