@@ -71,6 +71,7 @@ const signInAction = async ({ request }) => {
 const dashboardAction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
   const post = JSON.parse(formData.post);
+  console.log(post.id);
   const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${post.id}`;
 
   const jwtToken = localStorage.getItem("jwtToken");

@@ -1,15 +1,13 @@
 import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
-import previewStyles from "./Preview.module.css";
-import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { Link, useFetcher } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { format } from "date-fns";
+import { Preview } from "../preview/Preview.jsx";
 
 const ContentInput = ({ formErrors, formData, setFormData }) => {
   const handleContentChange = (newValue) => {
@@ -456,55 +454,6 @@ const FormTab = ({ formData, setFormData }) => {
   );
 };
 
-const PreviewTab = ({ formData }) => {
-  const jwtToken = localStorage.getItem("jwtToken");
-  const decoded = jwtDecode(jwtToken);
-
-  const { title, image, content, description, categoryObjects } = formData;
-  const currentDate = new Date();
-  const formattedDate = format(currentDate, "MMM d, y");
-  const author = decoded.user.name;
-
-  return (
-    <section className={previewStyles.preview}>
-      <header>
-        <p className={previewStyles.date}>{formattedDate}</p>
-      </header>
-      <h1 className={previewStyles.title}>{title || "[Your Title Here]"}</h1>
-      <img
-        src={
-          image ||
-          "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500"
-        }
-        alt="Article image"
-        className={previewStyles.image}
-      />
-      <p className={previewStyles.author}>
-        Posted by {author}. No comments yet.
-      </p>
-      <p className={previewStyles.description}>{description}</p>
-      <ul className={previewStyles.categoriesContainer}>
-        {categoryObjects.map((category) => (
-          <li key={category.id} className={previewStyles.categoryLink}>
-            {category.name}
-          </li>
-        ))}
-      </ul>
-      <div className={previewStyles.content}>
-        {content ? (
-          parse(DOMPurify.sanitize(content))
-        ) : (
-          <p>Write your thoughts here!</p>
-        )}
-      </div>
-      <div>
-        <h2 className={previewStyles.commentsHeading}>Comments</h2>
-        <p>No comments yet. Start the discussion!</p>
-      </div>
-    </section>
-  );
-};
-
 const CreateForm = () => {
   const [currentTab, setCurrentTab] = useState("form");
   // gets existing formData if any,
@@ -551,7 +500,7 @@ const CreateForm = () => {
       {currentTab === "form" ? (
         <FormTab formData={formData} setFormData={setFormData} />
       ) : (
-        <PreviewTab formData={formData} />
+        <Preview formData={formData} />
       )}
     </>
   );

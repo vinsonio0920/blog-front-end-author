@@ -7,6 +7,7 @@ import styles from "./EditPost.module.css";
 const EditForm = () => {
   const jwt = useContext(JwtContext);
   const { result } = useLoaderData();
+  console.log(result);
 
   if (!jwt.jwtToken) {
     return (
