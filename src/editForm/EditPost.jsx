@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useFetcher, useLoaderData } from "react-router-dom";
+import { Link, useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { JwtContext } from "../jwt-context.js";
 import styles from "./EditPost.module.css";
 import { jwtDecode } from "jwt-decode";
@@ -205,6 +205,7 @@ const ErrorElement = ({ message }) => {
 };
 
 const FormTab = ({ jwt, formData, setFormData }) => {
+  const navigate = useNavigate();
   const fetcher = useFetcher();
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [categories, setCategories] = useState(null);
@@ -271,6 +272,12 @@ const FormTab = ({ jwt, formData, setFormData }) => {
   fetcher.data?.errors.map((error) => {
     formErrors[error.path] = error.msg;
   });
+
+  const handleCancelClick = () => {
+    // reset session data and redirect user back to the homepage
+    sessionStorage.removeItem(`formData${formData.id}`);
+    navigate("/");
+  };
 
   const handleCategoryClick = () => {
     setShowCategoryDropdown(true);
@@ -455,7 +462,11 @@ const FormTab = ({ jwt, formData, setFormData }) => {
       </section>
       <section>
         <div className={styles.confirmationButtons}>
-          <button type="button" className={styles.cancelButton}>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleCancelClick}
+          >
             Cancel
           </button>
           <button type="submit" className={styles.confirmButton}>

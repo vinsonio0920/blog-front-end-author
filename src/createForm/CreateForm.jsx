@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
 import DOMPurify from "dompurify";
-import { Link, useFetcher } from "react-router-dom";
+import { Link, useFetcher, useNavigate } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -196,6 +196,7 @@ const ErrorElement = ({ message }) => {
 };
 
 const FormTab = ({ formData, setFormData }) => {
+  const navigate = useNavigate();
   const fetcher = useFetcher();
   const jwt = useContext(JwtContext);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
@@ -216,7 +217,6 @@ const FormTab = ({ formData, setFormData }) => {
           throw new Error("Problem occurred while fetching categories");
 
         setCategories(result.data);
-        console.log("Good!");
       } catch (err) {
         console.error(err.message);
         setCategories("error");
@@ -264,6 +264,12 @@ const FormTab = ({ formData, setFormData }) => {
   fetcher.data?.errors.map((error) => {
     formErrors[error.path] = error.msg;
   });
+
+  const handleCancelClick = () => {
+    // reset session data and redirect user back to the homepage
+    sessionStorage.removeItem("formData");
+    navigate("/");
+  };
 
   const handleCategoryClick = () => {
     setShowCategoryDropdown(true);
@@ -442,7 +448,11 @@ const FormTab = ({ formData, setFormData }) => {
       </section>
       <section>
         <div className={styles.confirmationButtons}>
-          <button type="button" className={styles.cancelButton}>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleCancelClick}
+          >
             Cancel
           </button>
           <button type="submit" className={styles.confirmButton}>
