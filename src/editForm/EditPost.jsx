@@ -538,7 +538,7 @@ const EditForm = () => {
       case "preview":
         return <Preview formData={formData} />;
       case "comments":
-        return <Comments />;
+        return <Comments postId={postData.id} />;
     }
   };
 
