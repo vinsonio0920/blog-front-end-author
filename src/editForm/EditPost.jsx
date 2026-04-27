@@ -5,6 +5,7 @@ import styles from "./EditPost.module.css";
 import { jwtDecode } from "jwt-decode";
 import { Editor } from "@tinymce/tinymce-react";
 import { Preview } from "../preview/Preview.jsx";
+import { Comments } from "../comments/Comments.jsx";
 
 // we will have multiple sessionStorage data for each edited post!
 // that we do don't have to worry about users losing data
@@ -528,6 +529,19 @@ const EditForm = () => {
     setCurrentTab(tab);
   };
 
+  const renderedTab = () => {
+    switch (currentTab) {
+      case "form":
+        return (
+          <FormTab jwt={jwt} formData={formData} setFormData={setFormData} />
+        );
+      case "preview":
+        return <Preview formData={formData} />;
+      case "comments":
+        return <Comments />;
+    }
+  };
+
   return (
     <>
       <div className={styles.modeTabs}>
@@ -547,12 +561,16 @@ const EditForm = () => {
         >
           Preview
         </button>
+        <button
+          type="button"
+          onClick={handleTabClick}
+          className={currentTab === "comments" ? styles.selected : null}
+          data-tab="comments"
+        >
+          Comments
+        </button>
       </div>
-      {currentTab === "form" ? (
-        <FormTab jwt={jwt} formData={formData} setFormData={setFormData} />
-      ) : (
-        <Preview formData={formData} />
-      )}
+      {renderedTab()}
     </>
   );
 };

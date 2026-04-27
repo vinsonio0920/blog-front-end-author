@@ -25,6 +25,7 @@ body:has(.overlay) {
 /* error styling */
 .errorContainer {
   min-height: calc(100vh - 4rem);
+  margin: inherit 1rem;
 }
 
 .errorContainer {
