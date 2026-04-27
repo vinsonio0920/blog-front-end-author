@@ -105,8 +105,8 @@ const Comments = ({ postId }) => {
   };
 
   return (
-    <>
-      <h1>Comments</h1>
+    <div className={styles.commentsContainer}>
+      <h1 className={styles.title}>Comments</h1>
       <CommentsList comments={comments} />
       {cursor?.status === "error" && (
         <p className={styles.commentsLoadErrorPara}>
@@ -125,7 +125,7 @@ const Comments = ({ postId }) => {
           Load more comments
         </button>
       )}
-    </>
+    </div>
   );
 };
 

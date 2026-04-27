@@ -1,0 +1,80 @@
+.commentsContainer {
+  line-height: 1.5;
+  max-width: 75ch;
+  margin: 3rem clamp(1rem, 6vw, 5rem);
+}
+
+.title {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.commentLi * {
+  margin: 0;
+}
+
+.commentLi {
+  border-bottom: 1px solid rgb(194, 194, 194);
+  padding-bottom: 1.25rem;
+  margin: 2.5rem auto 1.25rem auto !important;
+}
+
+.commentLi:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.commentName {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.commentDate {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #434343;
+  margin-bottom: 0.75rem;
+}
+
+.commentContent {
+  font-size: 1.1rem;
+}
+
+.commentEndPara {
+  text-align: center;
+  color: #434343;
+  margin-top: 1rem;
+}
+
+.loadButton {
+  display: block;
+  font-size: 1.1rem;
+  background-color: #ececec;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 2rem;
+  margin: 1rem auto auto auto;
+}
+
+.loadButton:hover {
+  background-color: #eeeeee;
+}
+
+.loadButton:active {
+  background-color: #eeeeee;
+}
+
+.commentsErrorPara,
+.commentsLoadErrorPara {
+  text-align: center;
+  color: red;
+}
+
+.commentsErrorPara {
+  margin-top: 1rem;
+}
+
+@media (min-width: 860px) {
+  .commentsContainer {
+    margin: 3rem auto;
+  }
+}
