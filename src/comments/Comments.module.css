@@ -88,6 +88,11 @@
   background-color: #eeeeee;
 }
 
+.emptyPara {
+  text-align: center;
+  margin-top: 1rem;
+}
+
 /* Errors */
 
 .commentsErrorPara,
@@ -98,6 +103,11 @@
 
 .commentsErrorPara {
   margin-top: 1rem;
+}
+
+.deleteError {
+  color: #f44336;
+  margin-top: -1rem;
 }
 
 @media (min-width: 860px) {

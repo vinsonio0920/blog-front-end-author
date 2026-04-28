@@ -116,7 +116,6 @@ const dashboardAction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
   const post = JSON.parse(formData.post);
   const action = formData.action;
-  console.log(action);
   const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${post.id}`;
 
   const jwtToken = localStorage.getItem("jwtToken");
@@ -172,12 +171,8 @@ const createFormAction = async ({ request }) => {
   }
 };
 
-const editFormAction = async ({ params, request }) => {
-  const formData = Object.fromEntries(await request.formData());
-  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${params.postId}`;
-
-  const jwtToken = localStorage.getItem("jwtToken");
-  if (!jwtToken) throw new Error("You must be signed in!");
+const editAction = async (formData, jwtToken, postId) => {
+  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${postId}`;
 
   try {
     const formattedPost = {
@@ -205,7 +200,7 @@ const editFormAction = async ({ params, request }) => {
 
     if (result.status === "success") {
       // delete sessionStorage since it's successful
-      sessionStorage.removeItem(`formData${params.postId}`);
+      sessionStorage.removeItem(`formData${postId}`);
 
       return redirect("/");
     } else {
@@ -213,6 +208,41 @@ const editFormAction = async ({ params, request }) => {
     }
   } catch (err) {
     console.error(err.message);
+  }
+};
+
+const deleteCommentAction = async (jwtToken, postId, commentId) => {
+  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${postId}/comments/${commentId}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: new Headers({
+        Authorization: `Bearer ${jwtToken}`,
+      }),
+    });
+
+    const result = await response.json();
+    console.log(result);
+    return result;
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+const editFormAction = async ({ params, request }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const action = formData.action;
+  const commentId = JSON.parse(formData.comment).id;
+  const postId = params.postId;
+
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
+
+  if (action === "edit") {
+    return editAction(formData, jwtToken, postId);
+  } else {
+    return deleteCommentAction(jwtToken, postId, commentId);
   }
 };
 

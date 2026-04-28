@@ -3,15 +3,28 @@ import styles from "./Comments.module.css";
 import { format } from "date-fns";
 import { useFetcher } from "react-router-dom";
 
-const ConfirmationModal = ({ targetedComment, setTargetedComment }) => {
+const ConfirmationModal = ({
+  targetedComment,
+  setTargetedComment,
+  comments,
+  setComments,
+}) => {
   const fetcher = useFetcher();
 
+  // since we added fetcher as a dependency, it will only run once
+  // instead of an infinite setState loop
   useEffect(() => {
     if (fetcher.data?.status === "success") {
       // hide modal and reset targetedPost and actiontype
       setTargetedComment(null);
+
+      const newComments = comments.filter(
+        (comment) =>
+          Number(comment.id) !== Number(JSON.parse(targetedComment).id),
+      );
+      setComments(newComments);
     }
-  }, [fetcher, setTargetedComment]);
+  }, [fetcher, targetedComment, setTargetedComment, comments, setComments]);
 
   const handleCancelClick = () => {
     setTargetedComment(null);
@@ -24,7 +37,7 @@ const ConfirmationModal = ({ targetedComment, setTargetedComment }) => {
         <h1>Are you sure?</h1>
         <p>Do you want to delete this post?</p>
         {fetcher.data?.status === "error" ? (
-          <p className="error">
+          <p className={styles.deleteError}>
             An error occurred deleting the post. Please try again later.
           </p>
         ) : null}
@@ -40,8 +53,13 @@ const ConfirmationModal = ({ targetedComment, setTargetedComment }) => {
             Delete
           </button>
         </div>
-        <input type="hidden" id="post" name="post" value={targetedComment} />
-        <input type="hidden" id="action" name="action" value="comment delete" />
+        <input
+          type="hidden"
+          id="comment"
+          name="comment"
+          value={targetedComment}
+        />
+        <input type="hidden" id="action" name="action" value="delete" />
       </fetcher.Form>
     </>
   );
@@ -55,7 +73,7 @@ const CommentsList = ({ comments, setTargetedComment }) => {
       </p>
     );
   } else if (comments.length < 1) {
-    return <p>No comments yet. Start the discussion!</p>;
+    return <p className={styles.emptyPara}>No comments yet.</p>;
   }
 
   const handleDeleteClick = (event) => {
@@ -171,6 +189,8 @@ const Comments = ({ postId }) => {
         <ConfirmationModal
           targetedComment={targetedComment}
           setTargetedComment={setTargetedComment}
+          comments={comments}
+          setComments={setComments}
         />
       )}
       <div className={styles.commentsContainer}>

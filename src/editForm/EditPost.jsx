@@ -453,9 +453,11 @@ const FormTab = ({ jwt, formData, setFormData }) => {
         <div>
           <input
             type="hidden"
+            id="categories"
             name="categories"
             value={JSON.stringify(formData.categories)}
           />
+          <input type="hidden" id="action" name="action" value="edit" />
         </div>
         <div>
           <input type="hidden" id="author" name="author" value={user.id} />
