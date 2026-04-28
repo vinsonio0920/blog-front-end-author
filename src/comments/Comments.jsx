@@ -1,8 +1,53 @@
 import { useEffect, useState } from "react";
 import styles from "./Comments.module.css";
 import { format } from "date-fns";
+import { useFetcher } from "react-router-dom";
 
-const CommentsList = ({ comments }) => {
+const ConfirmationModal = ({ targetedComment, setTargetedComment }) => {
+  const fetcher = useFetcher();
+
+  useEffect(() => {
+    if (fetcher.data?.status === "success") {
+      // hide modal and reset targetedPost and actiontype
+      setTargetedComment(null);
+    }
+  }, [fetcher, setTargetedComment]);
+
+  const handleCancelClick = () => {
+    setTargetedComment(null);
+  };
+
+  return (
+    <>
+      <div className="overlay" onClick={handleCancelClick}></div>
+      <fetcher.Form method="POST" className={styles.confirmationModal}>
+        <h1>Are you sure?</h1>
+        <p>Do you want to delete this post?</p>
+        {fetcher.data?.status === "error" ? (
+          <p className={styles.error}>
+            An error occurred deleting the post. Please try again later.
+          </p>
+        ) : null}
+        <div className={styles.confirmationButtons}>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleCancelClick}
+          >
+            Cancel
+          </button>
+          <button type="submit" className={styles.confirmButton}>
+            Delete
+          </button>
+        </div>
+        <input type="hidden" id="post" name="post" value={targetedComment} />
+        <input type="hidden" id="action" name="action" value="comment delete" />
+      </fetcher.Form>
+    </>
+  );
+};
+
+const CommentsList = ({ comments, setTargetedComment }) => {
   if (comments.status === "error" && comments.method === "get") {
     return (
       <p className={styles.commentsErrorPara}>
@@ -13,18 +58,33 @@ const CommentsList = ({ comments }) => {
     return <p>No comments yet. Start the discussion!</p>;
   }
 
+  const handleDeleteClick = (event) => {
+    const commentData = event.currentTarget.dataset.comment;
+    setTargetedComment(commentData);
+  };
+
   return (
     <ul>
       {comments.map((comment) => (
         <li key={comment.id} className={styles.commentLi}>
-          <header>
-            <p className={styles.commentName}>{comment.name}</p>
-            <p className={styles.commentDate}>
-              {format(comment.created, "MMMM d y, ")} at{" "}
-              {format(comment.created, "h:mm a")}
-            </p>
-          </header>
-          <p className={styles.commentContent}>{comment.content}</p>
+          <div>
+            <header>
+              <p className={styles.commentName}>{comment.name}</p>
+              <p className={styles.commentDate}>
+                {format(comment.created, "MMMM d y, ")} at{" "}
+                {format(comment.created, "h:mm a")}
+              </p>
+            </header>
+            <p className={styles.commentContent}>{comment.content}</p>
+          </div>
+          <button
+            type="button"
+            className={styles.deleteButton}
+            data-comment={JSON.stringify(comment)}
+            onClick={handleDeleteClick}
+          >
+            <span className="material-symbols-outlined">delete</span>
+          </button>
         </li>
       ))}
     </ul>
@@ -36,6 +96,7 @@ const Comments = ({ postId }) => {
   const [commentsCount, setCommentsCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [cursor, setCursor] = useState(null);
+  const [targetedComment, setTargetedComment] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,27 +166,38 @@ const Comments = ({ postId }) => {
   };
 
   return (
-    <div className={styles.commentsContainer}>
-      <h1 className={styles.title}>Comments</h1>
-      <CommentsList comments={comments} />
-      {cursor?.status === "error" && (
-        <p className={styles.commentsLoadErrorPara}>
-          There was an error loading the comments. Please try again later.
-        </p>
+    <>
+      {targetedComment && (
+        <ConfirmationModal
+          targetedComment={targetedComment}
+          setTargetedComment={setTargetedComment}
+        />
       )}
-      {comments.length >= commentsCount && comments.length > 0 && (
-        <p className={styles.commentEndPara}>End of comments.</p>
-      )}
-      {comments.length < commentsCount && comments.length > 0 && (
-        <button
-          type="button"
-          onClick={handleCommentLoadClick}
-          className={styles.loadButton}
-        >
-          Load more comments
-        </button>
-      )}
-    </div>
+      <div className={styles.commentsContainer}>
+        <h1 className={styles.title}>Comments</h1>
+        <CommentsList
+          comments={comments}
+          setTargetedComment={setTargetedComment}
+        />
+        {cursor?.status === "error" && (
+          <p className={styles.commentsLoadErrorPara}>
+            There was an error loading the comments. Please try again later.
+          </p>
+        )}
+        {comments.length >= commentsCount && comments.length > 0 && (
+          <p className={styles.commentEndPara}>End of comments.</p>
+        )}
+        {comments.length < commentsCount && comments.length > 0 && (
+          <button
+            type="button"
+            onClick={handleCommentLoadClick}
+            className={styles.loadButton}
+          >
+            Load more comments
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 

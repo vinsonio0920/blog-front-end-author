@@ -190,14 +190,14 @@ const Dashboard = () => {
 
   return (
     <>
-      {targetedPost ? (
+      {targetedPost && (
         <ConfirmationModal
           targetedPost={targetedPost}
           setTargetedPost={setTargetedPost}
           actionType={actionType}
           setActionType={setActionType}
         />
-      ) : null}
+      )}
       <div className={styles.dashboardContainer}>
         <h1 className={styles.mainHeading}>Dashboard</h1>
         <ul className={styles.postsUl}>
