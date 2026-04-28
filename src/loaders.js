@@ -1,6 +1,36 @@
 import { jwtDecode } from "jwt-decode";
 
+const requireAuthor = () => {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  if (jwtToken) {
+    const decoded = jwtDecode(jwtToken);
+    console.log(decoded.user.type);
+
+    // if user is not an author, move to the author code thingymajig
+    if (decoded.user.type !== "author") {
+      return {
+        result: {
+          status: "error",
+          type: "authorization",
+        },
+      };
+    }
+  }
+
+  return {
+    result: {
+      status: "success",
+    },
+  };
+};
+
 const dashboardLoader = async () => {
+  const authorResult = requireAuthor();
+  if (authorResult.result.status === "error") {
+    return authorResult;
+  }
+
   // get user details
   const jwtToken = localStorage.getItem("jwtToken");
 
@@ -34,7 +64,21 @@ const dashboardLoader = async () => {
   }
 };
 
+const createFormLoader = () => {
+  const authorResult = requireAuthor();
+  if (authorResult.result.status === "error") {
+    console.log("Yep");
+    return authorResult;
+  }
+};
+
 const postLoader = async ({ params }) => {
+  const authorResult = requireAuthor();
+  if (authorResult.result.status === "error") {
+    console.log("Yep");
+    return authorResult;
+  }
+
   const jwtToken = localStorage.getItem("jwtToken");
 
   if (jwtToken) {
@@ -79,4 +123,4 @@ const postLoader = async ({ params }) => {
   }
 };
 
-export { dashboardLoader, postLoader };
+export { dashboardLoader, postLoader, createFormLoader };

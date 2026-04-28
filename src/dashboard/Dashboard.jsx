@@ -142,6 +142,16 @@ const Dashboard = () => {
   const [actionType, setActionType] = useState(null);
   const { result } = useLoaderData();
 
+  // edge case for when user is not an author yet
+  if (result.status === "error" && result.type === "authorization") {
+    return (
+      <div className="errorContainer">
+        <p className="errorPara">You are not enrolled as an author yet.</p>
+        <Link to="/author-form">Enroll now</Link>
+      </div>
+    );
+  }
+
   const posts = result.data;
   const maxPages = Math.floor(posts.length / 8) + 1;
   let pagePosts;
@@ -165,6 +175,7 @@ const Dashboard = () => {
     }
   }
 
+  // other edge cases
   if (!jwt.jwtToken) {
     return (
       <div className="errorContainer">

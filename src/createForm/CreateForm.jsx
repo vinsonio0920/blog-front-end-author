@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { JwtContext } from "../jwt-context";
 import styles from "./CreateForm.module.css";
 import DOMPurify from "dompurify";
-import { Link, useFetcher, useNavigate } from "react-router-dom";
+import { Link, useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -481,6 +481,17 @@ const CreateForm = () => {
       // author is already in localStorage
     },
   );
+  const { result } = useLoaderData();
+
+  // edge case for when user is not an author yet
+  if (result.status === "error" && result.type === "authorization") {
+    return (
+      <div className="errorContainer">
+        <p className="errorPara">You are not enrolled as an author yet.</p>
+        <Link to="/author-form">Enroll now</Link>
+      </div>
+    );
+  }
 
   const handleTabClick = (event) => {
     const tab = event.currentTarget.dataset.tab;

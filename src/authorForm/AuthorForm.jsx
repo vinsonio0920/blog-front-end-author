@@ -1,0 +1,3 @@
+const AuthorForm = () => {};
+
+export { AuthorForm };

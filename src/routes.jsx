@@ -10,10 +10,11 @@ import { App } from "./App";
 import { ErrorPage } from "./error/ErrorPage";
 import { SignUp } from "./signUp/SignUp";
 import { Dashboard } from "./dashboard/Dashboard";
-import { dashboardLoader, postLoader } from "./loaders";
+import { createFormLoader, dashboardLoader, postLoader } from "./loaders";
 import { CreateForm } from "./createForm/CreateForm";
 import { EditForm } from "./editForm/EditPost";
 import { About } from "./about/About";
+import { AuthorForm } from "./authorForm/AuthorForm";
 
 const routes = [
   {
@@ -31,6 +32,7 @@ const routes = [
         path: "/create",
         action: createFormAction,
         element: <CreateForm />,
+        loader: createFormLoader,
       },
       {
         path: "/posts/:postId",
@@ -41,6 +43,10 @@ const routes = [
       {
         path: "/about",
         element: <About />,
+      },
+      {
+        path: "/author-form",
+        element: <AuthorForm />,
       },
     ],
   },
