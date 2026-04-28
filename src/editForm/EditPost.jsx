@@ -473,7 +473,7 @@ const FormTab = ({ jwt, formData, setFormData }) => {
             Cancel
           </button>
           <button type="submit" className={styles.confirmButton}>
-            Create
+            Update
           </button>
         </div>
       </section>

@@ -117,11 +117,7 @@ const Post = ({ post, setTargetedPost, setActionType }) => {
         {post.categories.length >= 1 ? (
           <div className={styles.categoriesContainer}>
             {post.categories.map((category) => (
-              <Link
-                to={`/categories/${category.id}`}
-                className={styles.categoryLink}
-                key={category.id}
-              >
+              <Link to={`#`} className={styles.categoryLink} key={category.id}>
                 {category.name}
               </Link>
             ))}

@@ -7,7 +7,7 @@ const dashboardLoader = async () => {
   if (jwtToken) {
     const decoded = jwtDecode(jwtToken);
     const userId = decoded.user.id;
-    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts?userId=${userId}`;
+    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts?userId=${userId}&showUnpublished=true`;
 
     try {
       const response = await fetch(url);
@@ -40,7 +40,7 @@ const postLoader = async ({ params }) => {
   if (jwtToken) {
     const decoded = jwtDecode(jwtToken);
     const userId = decoded.user.id;
-    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${params.postId}`;
+    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${params.postId}?showUnpublished=true`;
 
     try {
       const response = await fetch(url);

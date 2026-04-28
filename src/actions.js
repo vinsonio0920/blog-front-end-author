@@ -173,6 +173,7 @@ const createFormAction = async ({ request }) => {
 
 const editAction = async (formData, jwtToken, postId) => {
   const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/posts/${postId}`;
+  console.log("Edit!");
 
   try {
     const formattedPost = {
@@ -233,7 +234,6 @@ const deleteCommentAction = async (jwtToken, postId, commentId) => {
 const editFormAction = async ({ params, request }) => {
   const formData = Object.fromEntries(await request.formData());
   const action = formData.action;
-  const commentId = JSON.parse(formData.comment).id;
   const postId = params.postId;
 
   const jwtToken = localStorage.getItem("jwtToken");
@@ -242,6 +242,8 @@ const editFormAction = async ({ params, request }) => {
   if (action === "edit") {
     return editAction(formData, jwtToken, postId);
   } else {
+    const commentId = JSON.parse(formData.comment).id;
+
     return deleteCommentAction(jwtToken, postId, commentId);
   }
 };
