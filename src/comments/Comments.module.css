@@ -88,6 +88,8 @@
   background-color: #eeeeee;
 }
 
+/* Errors */
+
 .commentsErrorPara,
 .commentsLoadErrorPara {
   text-align: center;

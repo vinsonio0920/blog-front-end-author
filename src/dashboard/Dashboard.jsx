@@ -43,25 +43,25 @@ const ConfirmationModal = ({
   return (
     <>
       <div className="overlay" onClick={handleCancelClick}></div>
-      <fetcher.Form method="POST" className={styles.confirmationModal}>
+      <fetcher.Form method="POST" className="confirmationModal">
         <h1>Are you sure?</h1>
         <p>{confirmationText}</p>
         {fetcher.data?.status === "error" ? (
-          <p className={styles.error}>
+          <p className="styles.error">
             An error occurred{" "}
             {actionType === "publish" ? "updating" : "deleting"} the post.
             Please try again later.
           </p>
         ) : null}
-        <div className={styles.confirmationButtons}>
+        <div className="confirmationButtons">
           <button
             type="button"
-            className={styles.cancelButton}
+            className="cancelButton"
             onClick={handleCancelClick}
           >
             Cancel
           </button>
-          <button type="submit" className={styles.confirmButton}>
+          <button type="submit" className="confirmButton">
             {submitText}
           </button>
         </div>

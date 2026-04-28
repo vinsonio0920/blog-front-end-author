@@ -274,6 +274,12 @@ label[for="content"] ~ .error {
   margin-bottom: 1.5rem;
 }
 
+@media (max-width: 300px) {
+  .modeTabs {
+    width: 90%;
+  }
+}
+
 @media (min-width: 600px) {
   form {
     max-width: 57.5rem;
