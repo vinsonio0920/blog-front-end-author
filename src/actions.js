@@ -248,10 +248,35 @@ const editFormAction = async ({ params, request }) => {
   }
 };
 
+const authorFormAction = async ({ request }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/users/${formData.userId}`;
+
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (!jwtToken) throw new Error("You must be signed in!");
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      body: new URLSearchParams(formData),
+    });
+
+    const result = await response.json();
+    if (result.status === "success") {
+      return redirect("/");
+    } else {
+      return result;
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
 export {
   signUpAction,
   signInAction,
   dashboardAction,
   createFormAction,
   editFormAction,
+  authorFormAction,
 };

@@ -1,5 +1,6 @@
 import { SignIn } from "./signIn/SignIn";
 import {
+  authorFormAction,
   createFormAction,
   dashboardAction,
   editFormAction,
@@ -46,6 +47,7 @@ const routes = [
       },
       {
         path: "/author-form",
+        action: authorFormAction,
         element: <AuthorForm />,
       },
     ],
