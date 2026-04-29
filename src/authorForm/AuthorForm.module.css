@@ -1,0 +1,45 @@
+.authorForm {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 30rem;
+}
+
+.authorHeading {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.authorPara {
+  text-align: center;
+  margin: -1.5rem auto 1.5rem auto;
+}
+
+.authorForm input {
+  text-align: center;
+}
+
+.submitButton {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+
+  text-transform: capitalize;
+  background-color: #7b7b7b;
+  width: 90%;
+  margin: -0.25rem auto 0 auto;
+}
+
+.submitButton:hover {
+  background-color: #818181;
+}
+
+.submitButton:active {
+  background-color: #7b7b7b;
+}
