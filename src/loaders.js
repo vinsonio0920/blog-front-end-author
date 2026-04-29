@@ -1,33 +1,44 @@
 import { jwtDecode } from "jwt-decode";
 
-const requireAuthor = () => {
+const requireAuthor = async () => {
   const jwtToken = localStorage.getItem("jwtToken");
 
   if (jwtToken) {
     const decoded = jwtDecode(jwtToken);
-    console.log(decoded.user.type);
 
-    // if user is not an author, move to the author code thingymajig
-    if (decoded.user.type !== "author") {
-      return {
-        result: {
-          status: "error",
-          type: "authorization",
-        },
-      };
+    // get author from database and check status
+    const url = `${import.meta.env.VITE_BLOG_API_WEBSITE}/users/${decoded.user.id}`;
+    try {
+      const response = await fetch(url);
+
+      const result = await response.json();
+      const user = result.data;
+
+      if (user.type !== "author") {
+        return {
+          result: {
+            status: "error",
+            type: "authorization",
+          },
+        };
+      } else {
+        return {
+          result: {
+            status: "success",
+          },
+        };
+      }
+    } catch (err) {
+      console.error(err.message);
     }
+  } else {
+    return;
   }
-
-  return {
-    result: {
-      status: "success",
-    },
-  };
 };
 
 const dashboardLoader = async () => {
-  const authorResult = requireAuthor();
-  if (authorResult.result.status === "error") {
+  const authorResult = await requireAuthor();
+  if (authorResult?.result?.status === "error") {
     return authorResult;
   }
 
@@ -64,18 +75,22 @@ const dashboardLoader = async () => {
   }
 };
 
-const createFormLoader = () => {
-  const authorResult = requireAuthor();
-  if (authorResult.result.status === "error") {
-    console.log("Yep");
+const createFormLoader = async () => {
+  const authorResult = await requireAuthor();
+  if (authorResult?.result?.status === "error") {
     return authorResult;
   }
+
+  return {
+    result: {
+      status: "success",
+    },
+  };
 };
 
 const postLoader = async ({ params }) => {
-  const authorResult = requireAuthor();
-  if (authorResult.result.status === "error") {
-    console.log("Yep");
+  const authorResult = await requireAuthor();
+  if (authorResult?.result?.status === "error") {
     return authorResult;
   }
 

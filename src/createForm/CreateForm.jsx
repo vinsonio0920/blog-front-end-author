@@ -195,10 +195,9 @@ const ErrorElement = ({ message }) => {
   return <p className={styles.error}>{message}</p>;
 };
 
-const FormTab = ({ formData, setFormData }) => {
+const FormTab = ({ jwt, formData, setFormData }) => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
-  const jwt = useContext(JwtContext);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [categories, setCategories] = useState(null);
 
@@ -241,14 +240,7 @@ const FormTab = ({ formData, setFormData }) => {
     };
   }, []);
 
-  if (!jwt.jwtToken) {
-    return (
-      <div className="errorContainer">
-        <p className="errorPara">You are not currently signed in.</p>
-        <Link to="/sign-in">Sign in now</Link>
-      </div>
-    );
-  } else if (categories === "error") {
+  if (categories === "error") {
     return (
       <div className="errorContainer">
         <p className="errorPara">
@@ -481,6 +473,7 @@ const CreateForm = () => {
       // author is already in localStorage
     },
   );
+  const jwt = useContext(JwtContext);
   const { result } = useLoaderData();
 
   // edge case for when user is not an author yet
@@ -489,6 +482,13 @@ const CreateForm = () => {
       <div className="errorContainer">
         <p className="errorPara">You are not enrolled as an author yet.</p>
         <Link to="/author-form">Enroll now</Link>
+      </div>
+    );
+  } else if (!jwt.jwtToken) {
+    return (
+      <div className="errorContainer">
+        <p className="errorPara">You are not currently signed in.</p>
+        <Link to="/sign-in">Sign in now</Link>
       </div>
     );
   }
@@ -519,7 +519,7 @@ const CreateForm = () => {
         </button>
       </div>
       {currentTab === "form" ? (
-        <FormTab formData={formData} setFormData={setFormData} />
+        <FormTab jwt={jwt} formData={formData} setFormData={setFormData} />
       ) : (
         <Preview formData={formData} />
       )}

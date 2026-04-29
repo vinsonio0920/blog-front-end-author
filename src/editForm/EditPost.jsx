@@ -483,6 +483,8 @@ const FormTab = ({ jwt, formData, setFormData }) => {
 
 const EditForm = () => {
   const jwt = useContext(JwtContext);
+  const { result } = useLoaderData();
+  const postData = result.data;
   const [currentTab, setCurrentTab] = useState("form");
   const [formData, setFormData] = useState(
     JSON.parse(sessionStorage.getItem(`formData${result.data.id}`)) ?? {
@@ -498,7 +500,6 @@ const EditForm = () => {
       categoryObjects: postData.categories,
     },
   );
-  const { result } = useLoaderData();
 
   // edge case for when user is not an author yet
   if (result.status === "error" && result.type === "authorization") {
@@ -509,8 +510,6 @@ const EditForm = () => {
       </div>
     );
   }
-
-  const postData = result.data;
 
   // other edge cases
   if (!jwt.jwtToken) {
