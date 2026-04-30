@@ -1,6 +1,6 @@
 import { Link, useFetcher, useLoaderData } from "react-router-dom";
 import styles from "./Dashboard.module.css";
-import { useContext, useEffect, useState } from "react";
+import { act, useContext, useEffect, useState } from "react";
 import { JwtContext } from "../jwt-context";
 import { format } from "date-fns";
 
@@ -47,7 +47,7 @@ const ConfirmationModal = ({
         <h1>Are you sure?</h1>
         <p>{confirmationText}</p>
         {fetcher.data?.status === "error" ? (
-          <p className="styles.error">
+          <p className={styles.error}>
             An error occurred{" "}
             {actionType === "publish" ? "updating" : "deleting"} the post.
             Please try again later.
