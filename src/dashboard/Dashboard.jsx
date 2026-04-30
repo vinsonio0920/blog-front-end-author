@@ -1,6 +1,6 @@
 import { Link, useFetcher, useLoaderData } from "react-router-dom";
 import styles from "./Dashboard.module.css";
-import { act, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { JwtContext } from "../jwt-context";
 import { format } from "date-fns";
 
@@ -207,17 +207,19 @@ const Dashboard = () => {
       )}
       <div className={styles.dashboardContainer}>
         <h1 className={styles.mainHeading}>Dashboard</h1>
-        <ul className={styles.postsUl}>
-          {pagePosts.map((post) => (
-            <li key={post.id}>
-              <Post
-                post={post}
-                setTargetedPost={setTargetedPost}
-                setActionType={setActionType}
-              />
-            </li>
-          ))}
-        </ul>
+        <div className={styles.postsUlContainer}>
+          <ul className={styles.postsUl}>
+            {pagePosts.map((post) => (
+              <li key={post.id}>
+                <Post
+                  post={post}
+                  setTargetedPost={setTargetedPost}
+                  setActionType={setActionType}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
         <div className={styles.pageContainer}>
           <button
             className={page <= 1 ? styles.disabled : ""}
