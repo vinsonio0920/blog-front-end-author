@@ -87,6 +87,7 @@
 }
 
 .authForm input[type="text"],
+.authForm input[type="password"],
 .authForm button[type="submit"] {
   font-size: 1rem;
   width: 100%;
@@ -95,7 +96,8 @@
   margin-bottom: 1rem;
 }
 
-.authForm input[type="text"] {
+.authForm input[type="text"],
+.authForm input[type="password"] {
   border: 1px solid #cecece;
 }
 

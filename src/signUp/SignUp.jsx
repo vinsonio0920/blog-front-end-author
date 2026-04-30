@@ -103,7 +103,7 @@ const SignUp = () => {
             <div>
               <label htmlFor="password">Password</label>
               <input
-                type="text"
+                type="password"
                 id="password"
                 name="password"
                 className={formErrors["password"] ? styles.invalid : null}
