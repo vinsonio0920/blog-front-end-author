@@ -90,12 +90,11 @@ body:has(.overlay) {
 }
 
 /* error styling */
+.renderNotification,
 .errorContainer {
   min-height: calc(100vh - 4rem);
   margin: inherit 1rem;
-}
 
-.errorContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -111,6 +110,12 @@ body:has(.overlay) {
 
 .errorContainer a {
   color: #00a7e1;
+}
+
+.notificationPara {
+  text-align: center;
+  padding-bottom: 0;
+  margin: -4rem 0 1rem 0;
 }
 
 .visuallyHidden {

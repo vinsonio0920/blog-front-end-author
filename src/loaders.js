@@ -2,7 +2,6 @@ import { jwtDecode } from "jwt-decode";
 
 const requireAuthor = async () => {
   const jwtToken = localStorage.getItem("jwtToken");
-
   if (jwtToken) {
     const decoded = jwtDecode(jwtToken);
 
@@ -30,6 +29,12 @@ const requireAuthor = async () => {
       }
     } catch (err) {
       console.error(err.message);
+      return {
+        result: {
+          status: "error",
+          type: "render",
+        },
+      };
     }
   } else {
     return;

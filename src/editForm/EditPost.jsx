@@ -509,6 +509,18 @@ const EditForm = () => {
         <Link to="/author-form">Enroll now</Link>
       </div>
     );
+  } else if (result.status === "error" && result.type === "render") {
+    return (
+      <div className="renderNotification">
+        <p className="notificationPara">
+          Please wait while the server wakes up...
+        </p>
+        <p>
+          If nothing happens after 10 seconds, please refresh or try again
+          later.
+        </p>
+      </div>
+    );
   }
 
   // other edge cases
