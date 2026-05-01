@@ -150,7 +150,13 @@ const CategoryDropdown = ({
     }
   };
 
-  if (categoriesResult.length >= 1) {
+  if (categories.length <= 0 && categoryValue.trim() === "") {
+    return (
+      <div className={styles.categoriesDropdown}>
+        <p>No categories yet.</p>
+      </div>
+    );
+  } else if (categoriesResult.length >= 1) {
     return (
       <div className={styles.categoriesDropdown}>
         <ul className={styles.categoriesList}>
