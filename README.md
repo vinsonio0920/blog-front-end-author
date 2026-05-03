@@ -21,6 +21,7 @@ The author-side frontend website for the blog website. Here, users can create, u
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
+
   <ol>
     <li>
       <a href="#introduction">Introduction</a>
@@ -111,6 +112,11 @@ And you're done! Feel free make an account or sign in (remember you can use the 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
+
+<img width="1668" height="958" alt="Image of the website homepage" src="https://github.com/user-attachments/assets/9e17d558-4226-49c2-a08f-864b4def4aae" />
+<p align="center">
+  <a href="https://vinsonstudio.netlify.app/">Visit the website</a>
+</p>
 
 This website is where all the interesting stuff happens. While the user-side frontend simply shows posts and allows for commenting, the author-side frontend is much more than that. A big part of the website is its CRUD functionality, which naturally means a lot of communication with the backend. The form here is also production-ready and can handle just about anything! Alongside that, it also has a preview and comments tab (edit mode) for convenience.
 
